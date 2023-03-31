@@ -1,0 +1,171 @@
+object Form1: TForm1
+  Left = 712
+  Height = 659
+  Top = 250
+  Width = 861
+  Caption = 'Form1'
+  ClientHeight = 659
+  ClientWidth = 861
+  DesignTimePPI = 144
+  Menu = MainMenu1
+  object Panel1: TPanel
+    Left = 0
+    Height = 659
+    Top = 0
+    Width = 259
+    Align = alLeft
+    Caption = 'Panel1'
+    ClientHeight = 659
+    ClientWidth = 259
+    TabOrder = 0
+    object Button1: TButton
+      Left = 44
+      Height = 48
+      Top = 45
+      Width = 119
+      Caption = 'Button1'
+      TabOrder = 0
+    end
+    object Label1: TLabel
+      Left = 54
+      Height = 25
+      Top = 118
+      Width = 51
+      Caption = 'Label1'
+    end
+    object Edit1: TEdit
+      Left = 54
+      Height = 33
+      Top = 171
+      Width = 116
+      TabOrder = 1
+      Text = 'Edit1'
+    end
+    object Memo1: TMemo
+      Left = 61
+      Height = 129
+      Top = 257
+      Width = 141
+      Lines.Strings = (
+        'Memo1'
+      )
+      TabOrder = 2
+    end
+    object CheckBox1: TCheckBox
+      Left = 28
+      Height = 29
+      Top = 423
+      Width = 111
+      Caption = 'CheckBox1'
+      TabOrder = 3
+    end
+    object RadioButton1: TRadioButton
+      Left = 42
+      Height = 29
+      Top = 474
+      Width = 134
+      Caption = 'RadioButton1'
+      TabOrder = 4
+    end
+    object ComboBox1: TComboBox
+      Left = 51
+      Height = 33
+      Top = 548
+      Width = 127
+      ItemHeight = 25
+      TabOrder = 5
+      Text = 'ComboBox1'
+    end
+  end
+  object Splitter1: TSplitter
+    Left = 259
+    Height = 659
+    Top = 0
+    Width = 13
+  end
+  object GroupBox1: TGroupBox
+    Left = 272
+    Height = 659
+    Top = 0
+    Width = 589
+    Align = alClient
+    Caption = 'GroupBox1'
+    ClientHeight = 629
+    ClientWidth = 585
+    TabOrder = 2
+    object ToolBar1: TToolBar
+      Left = 0
+      Height = 35
+      Top = 0
+      Width = 585
+      AutoSize = True
+      Caption = 'ToolBar1'
+      TabOrder = 0
+      object ToolButton1: TToolButton
+        Left = 1
+        Top = 2
+        Caption = 'ToolButton1'
+      end
+      object ToolButton2: TToolButton
+        Left = 36
+        Top = 2
+        Caption = 'ToolButton2'
+      end
+      object ToolButton3: TToolButton
+        Left = 71
+        Top = 2
+        Caption = 'ToolButton3'
+      end
+      object ToolButton4: TToolButton
+        Left = 106
+        Top = 2
+        Caption = 'ToolButton4'
+      end
+    end
+    object TreeView1: TTreeView
+      Left = 84
+      Height = 133
+      Top = 187
+      Width = 202
+      TabOrder = 1
+      Items.Data = {
+        F9FFFFFF020003000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
+        000000050000004974656D30FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF01000000
+        0000000001050000004974656D31FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0300
+        00000000000001050000004974656D33FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        000000000000000000050000004974656D34FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFF000000000000000000050000004974656D35FFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFF000000000000000000050000004974656D36FFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFF000000000000000000050000004974656D32
+      }
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 320
+    Top = 59
+    object MenuItem1: TMenuItem
+      Caption = 'MenuItem1'
+      object MenuItem2: TMenuItem
+        Caption = 'MenuItem2'
+      end
+      object MenuItem3: TMenuItem
+        Caption = 'MenuItem3'
+        object MenuItem4: TMenuItem
+          Caption = 'MenuItem4'
+          object MenuItem5: TMenuItem
+            Caption = 'MenuItem5'
+          end
+        end
+        object MenuItem6: TMenuItem
+          Caption = 'MenuItem6'
+        end
+        object MenuItem7: TMenuItem
+          Caption = 'MenuItem7'
+        end
+      end
+    end
+    object MenuItem8: TMenuItem
+      Caption = 'MenuItem8'
+    end
+  end
+end

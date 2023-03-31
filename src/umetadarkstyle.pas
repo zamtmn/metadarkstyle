@@ -19,13 +19,14 @@
 unit uMetaDarkStyle;
 
 interface
+
+{$IFDEF WINDOWS}
 uses
-  {$IFDEF WINDOWS}
     {$IF DEFINED(LCLQT5)}
       uDarkStyle,
     {$ENDIF}
     uWin32WidgetSetDark;
-  {$ENDIF}
+{$ENDIF}
 
 procedure ApplyMetaDarkStyle;
 procedure MetaDarkFormChanged(Form: TObject);

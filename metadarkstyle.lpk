@@ -9,13 +9,17 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <OtherUnitFiles Value="src"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Files>
       <Item>
         <Filename Value="src\umetadarkstyle.pas"/>
         <UnitName Value="uMetaDarkStyle"/>
+      </Item>
+      <Item>
+        <Filename Value="src\udarkstyleparams.pas"/>
+        <UnitName Value="uDarkStyleParams"/>
       </Item>
     </Files>
     <RequiredPkgs>

@@ -893,161 +893,160 @@ begin
     if Theme[Index] = hTheme then
     begin
       Element:= Index;
-      Break;
+      if Element = teHeader then
+      begin
+        if iPartId in [HP_HEADERITEM, HP_HEADERITEMRIGHT] then
+        begin
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            AColor:= SysColor[COLOR_BTNFACE];
+
+            if iStateId in [HIS_HOT, HIS_SORTEDHOT, HIS_ICONHOT, HIS_ICONSORTEDHOT] then
+              FillGradient(hdc, Lighter(AColor, 174), Lighter(AColor, 166), pRect, GRADIENT_FILL_RECT_V)
+            else
+              FillGradient(hdc, Lighter(AColor, 124), Lighter(AColor, 116), pRect, GRADIENT_FILL_RECT_V);
+
+            if (iPartId <> HP_HEADERITEMRIGHT) then
+            begin
+              LCanvas.Pen.Color:= Lighter(AColor, 104);
+              LCanvas.Line(pRect.Right-1, pRect.Top, pRect.Right-1, pRect.Bottom);
+
+              LCanvas.Pen.Color:= Lighter(AColor, 158);
+              LCanvas.Line(pRect.Right - 2, pRect.Top, pRect.Right - 2, pRect.Bottom);
+            end;
+            // Top line
+            LCanvas.Pen.Color:= Lighter(AColor, 164);
+            LCanvas.Line(pRect.Left, pRect.Top, pRect.Right, pRect.Top);
+            // Bottom line
+            LCanvas.Pen.Color:= Darker(AColor, 140);
+            LCanvas.Line(pRect.Left, pRect.Bottom - 1, pRect.Right, pRect.Bottom - 1);
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end;
+      end
+
+      else if Element = teMenu then
+      begin
+        if iPartId in [MENU_BARBACKGROUND, MENU_POPUPITEM, MENU_POPUPGUTTER,
+                       MENU_POPUPSUBMENU, MENU_POPUPSEPARATOR, MENU_POPUPCHECK,
+                       MENU_POPUPCHECKBACKGROUND] then
+        begin
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+
+            if not (iPartId in [MENU_POPUPSUBMENU, MENU_POPUPCHECK, MENU_POPUPCHECKBACKGROUND]) then
+            begin
+              if iStateId = MDS_HOT then
+                LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT]
+              else begin
+                LCanvas.Brush.Color:= RGBToColor(45, 45, 45);
+              end;
+              LCanvas.FillRect(pRect);
+            end;
+
+            if iPartId = MENU_POPUPCHECK then
+            begin
+              AStyle:= LCanvas.TextStyle;
+              AStyle.Layout:= tlCenter;
+              AStyle.Alignment:= taCenter;
+              LCanvas.Brush.Style:= bsClear;
+              LCanvas.Font.Name:= 'Segoe MDL2 Assets';
+              LCanvas.Font.Color:= RGBToColor(212, 212, 212);
+              LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_CHECKED, AStyle);
+            end;
+
+            if iPartId = MENU_POPUPSEPARATOR then
+            begin
+             LRect:= pRect;
+             LCanvas.Pen.Color:= RGBToColor(112, 112, 112);
+             LRect.Top:= LRect.Top + (LRect.Height div 2);
+             LRect.Bottom:= LRect.Top;
+
+             LCanvas.Line(LRect);
+            end;
+
+            if (iPartId = MENU_POPUPCHECKBACKGROUND) then
+            begin
+              LRect:= pRect;
+              InflateRect(LRect, -1, -1);
+              LCanvas.Pen.Color:= RGBToColor(45, 45, 45);
+              LCanvas.Brush.Color:= RGBToColor(81, 81, 81);
+              LCanvas.RoundRect(LRect, 6, 6);
+            end;
+
+            if iPartId = MENU_POPUPSUBMENU then
+            begin
+              LCanvas.Brush.Style:= bsClear;
+              LCanvas.Font.Name:= 'Segoe MDL2 Assets';
+              LCanvas.Font.Color:= RGBToColor(111, 111, 111);
+              LCanvas.TextOut(pRect.Left, pRect.Top, MDL_MENU_SUBMENU);
+            end;
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end;
+      end
+
+      else if Element = teToolBar then
+      begin
+        if iPartId in [TP_BUTTON] then
+        begin
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            AColor:= SysColor[COLOR_BTNFACE];
+
+            if iStateId = TS_HOT then
+              LCanvas.Brush.Color:= Lighter(AColor, 116)
+            else if iStateId = TS_PRESSED then
+              LCanvas.Brush.Color:= Darker(AColor, 116)
+            else begin
+              LCanvas.Brush.Color:= AColor;
+            end;
+            LCanvas.FillRect(pRect);
+
+           if iStateId <> TS_NORMAL then
+           begin
+             if iStateId = TS_CHECKED then
+             begin
+               LRect:= pRect;
+               InflateRect(LRect, -2, -2);
+               LCanvas.Brush.Color:= Lighter(AColor, 146);
+               LCanvas.FillRect(LRect);
+             end;
+
+             LCanvas.Pen.Color:= Darker(AColor, 140);
+             LCanvas.RoundRect(pRect, 6, 6);
+
+             LRect:= pRect;
+
+             LCanvas.Pen.Color:= Lighter(AColor, 140);
+             InflateRect(LRect, -1, -1);
+             LCanvas.RoundRect(LRect, 6, 6);
+           end;
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end;
+      end
+
+      else if Element = teButton then
+      begin
+        DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+      end
+
+      else
+        TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+      exit(S_OK);
     end;
   end;
-
-  if Element = teHeader then
-  begin
-    if iPartId in [HP_HEADERITEM, HP_HEADERITEMRIGHT] then
-    begin
-      LCanvas:= TCanvas.Create;
-      try
-        LCanvas.Handle:= hdc;
-        AColor:= SysColor[COLOR_BTNFACE];
-
-        if iStateId in [HIS_HOT, HIS_SORTEDHOT, HIS_ICONHOT, HIS_ICONSORTEDHOT] then
-          FillGradient(hdc, Lighter(AColor, 174), Lighter(AColor, 166), pRect, GRADIENT_FILL_RECT_V)
-        else
-          FillGradient(hdc, Lighter(AColor, 124), Lighter(AColor, 116), pRect, GRADIENT_FILL_RECT_V);
-
-        if (iPartId <> HP_HEADERITEMRIGHT) then
-        begin
-          LCanvas.Pen.Color:= Lighter(AColor, 104);
-          LCanvas.Line(pRect.Right-1, pRect.Top, pRect.Right-1, pRect.Bottom);
-
-          LCanvas.Pen.Color:= Lighter(AColor, 158);
-          LCanvas.Line(pRect.Right - 2, pRect.Top, pRect.Right - 2, pRect.Bottom);
-        end;
-        // Top line
-        LCanvas.Pen.Color:= Lighter(AColor, 164);
-        LCanvas.Line(pRect.Left, pRect.Top, pRect.Right, pRect.Top);
-        // Bottom line
-        LCanvas.Pen.Color:= Darker(AColor, 140);
-        LCanvas.Line(pRect.Left, pRect.Bottom - 1, pRect.Right, pRect.Bottom - 1);
-      finally
-        LCanvas.Handle:= 0;
-        LCanvas.Free;
-      end;
-    end;
-  end
-
-  else if Element = teMenu then
-  begin
-    if iPartId in [MENU_BARBACKGROUND, MENU_POPUPITEM, MENU_POPUPGUTTER,
-                   MENU_POPUPSUBMENU, MENU_POPUPSEPARATOR, MENU_POPUPCHECK,
-                   MENU_POPUPCHECKBACKGROUND] then
-    begin
-      LCanvas:= TCanvas.Create;
-      try
-        LCanvas.Handle:= hdc;
-
-        if not (iPartId in [MENU_POPUPSUBMENU, MENU_POPUPCHECK, MENU_POPUPCHECKBACKGROUND]) then
-        begin
-          if iStateId = MDS_HOT then
-            LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT]
-          else begin
-            LCanvas.Brush.Color:= RGBToColor(45, 45, 45);
-          end;
-          LCanvas.FillRect(pRect);
-        end;
-
-        if iPartId = MENU_POPUPCHECK then
-        begin
-          AStyle:= LCanvas.TextStyle;
-          AStyle.Layout:= tlCenter;
-          AStyle.Alignment:= taCenter;
-          LCanvas.Brush.Style:= bsClear;
-          LCanvas.Font.Name:= 'Segoe MDL2 Assets';
-          LCanvas.Font.Color:= RGBToColor(212, 212, 212);
-          LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_CHECKED, AStyle);
-        end;
-
-        if iPartId = MENU_POPUPSEPARATOR then
-        begin
-         LRect:= pRect;
-         LCanvas.Pen.Color:= RGBToColor(112, 112, 112);
-         LRect.Top:= LRect.Top + (LRect.Height div 2);
-         LRect.Bottom:= LRect.Top;
-
-         LCanvas.Line(LRect);
-        end;
-
-        if (iPartId = MENU_POPUPCHECKBACKGROUND) then
-        begin
-          LRect:= pRect;
-          InflateRect(LRect, -1, -1);
-          LCanvas.Pen.Color:= RGBToColor(45, 45, 45);
-          LCanvas.Brush.Color:= RGBToColor(81, 81, 81);
-          LCanvas.RoundRect(LRect, 6, 6);
-        end;
-
-        if iPartId = MENU_POPUPSUBMENU then
-        begin
-          LCanvas.Brush.Style:= bsClear;
-          LCanvas.Font.Name:= 'Segoe MDL2 Assets';
-          LCanvas.Font.Color:= RGBToColor(111, 111, 111);
-          LCanvas.TextOut(pRect.Left, pRect.Top, MDL_MENU_SUBMENU);
-        end;
-      finally
-        LCanvas.Handle:= 0;
-        LCanvas.Free;
-      end;
-    end;
-  end
-
-  else if Element = teToolBar then
-  begin
-    if iPartId in [TP_BUTTON] then
-    begin
-      LCanvas:= TCanvas.Create;
-      try
-        LCanvas.Handle:= hdc;
-        AColor:= SysColor[COLOR_BTNFACE];
-
-        if iStateId = TS_HOT then
-          LCanvas.Brush.Color:= Lighter(AColor, 116)
-        else if iStateId = TS_PRESSED then
-          LCanvas.Brush.Color:= Darker(AColor, 116)
-        else begin
-          LCanvas.Brush.Color:= AColor;
-        end;
-        LCanvas.FillRect(pRect);
-
-       if iStateId <> TS_NORMAL then
-       begin
-         if iStateId = TS_CHECKED then
-         begin
-           LRect:= pRect;
-           InflateRect(LRect, -2, -2);
-           LCanvas.Brush.Color:= Lighter(AColor, 146);
-           LCanvas.FillRect(LRect);
-         end;
-
-         LCanvas.Pen.Color:= Darker(AColor, 140);
-         LCanvas.RoundRect(pRect, 6, 6);
-
-         LRect:= pRect;
-
-         LCanvas.Pen.Color:= Lighter(AColor, 140);
-         InflateRect(LRect, -1, -1);
-         LCanvas.RoundRect(LRect, 6, 6);
-       end;
-      finally
-        LCanvas.Handle:= 0;
-        LCanvas.Free;
-      end;
-    end;
-  end
-
-  else if Element = teButton then
-  begin
-    DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-  end
-
-  else
-    TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-
+  TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
   Result:= S_OK;
 end;
 

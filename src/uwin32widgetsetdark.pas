@@ -124,12 +124,20 @@ type
       class procedure Popup(const APopupMenu: TPopupMenu; const X, Y: integer); override;
     end;
 
+    { TWin32WSCustomListViewDark }
+
+    TWin32WSCustomListViewDark = class(TWin32WSCustomListView)
+    published
+      class function CreateHandle(const AWinControl: TWinControl;
+            const AParams: TCreateParams): HWND; override;
+    end;
 const
   ID_SUB_SCROLLBOX   = 1;
   ID_SUB_LISTBOX     = 2;
   ID_SUB_COMBOBOX    = 3;
   ID_SUB_STATUSBAR   = 4;
   ID_SUB_TRACKBAR    = 5;
+  ID_SUB_LISTVIEW    = 6;
 
 const
   themelib = 'uxtheme.dll';
@@ -498,6 +506,45 @@ begin
   AWinControl.Color:= SysColor[COLOR_BTNFACE];
   Result:= inherited CreateHandle(AWinControl, AParams);
   SetWindowSubclass(Result, @TrackBarWindowProc, ID_SUB_TRACKBAR, 0);
+end;
+
+{ TWin32WSCustomListViewDark }
+
+function ListViewWindowProc(Window: HWND; Msg: UINT; wParam: Windows.WPARAM; lParam: Windows.LPARAM; uISubClass: UINT_PTR; dwRefData: DWORD_PTR): LRESULT; stdcall;
+var NMHdr: PNMHDR; NMCustomDraw: PNMCustomDraw;
+begin
+  Result := DefSubclassProc(Window, Msg, WParam, LParam);//erase this
+  exit;                                                  //erase this
+  //we are trying to draw header below
+  If Msg = WM_NOTIFY then begin
+    NMHdr := PNMHDR(LParam);
+    if NMHdr^.code = NM_CUSTOMDRAW then begin
+      NMCustomDraw:= PNMCustomDraw(LParam);
+      case NMCustomDraw^.dwDrawStage of
+        CDDS_PREPAINT:
+        begin
+          Result := CDRF_NOTIFYITEMDRAW;
+          exit;
+        end;
+        CDDS_ITEMPREPAINT:
+        begin
+          SetTextColor(NMCustomDraw^.hdc , SysColor[COLOR_HIGHLIGHTTEXT]);
+          Result := CDRF_NEWFONT;
+          exit;
+        end;
+      end;
+    end;
+  end;
+  Result := DefSubclassProc(Window, Msg, WParam, LParam);
+end;
+
+class function TWin32WSCustomListViewDark.CreateHandle(
+  const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
+begin
+  AWinControl.Color:= SysColor[COLOR_BTNFACE];
+  Result:= inherited CreateHandle(AWinControl, AParams);
+  SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
+  EnableDarkStyle(Result);
 end;
 
 class procedure TWin32WSTrackBarDark.DefaultWndHandler(
@@ -1347,6 +1394,9 @@ begin
 
   RegisterCustomTrackBar;
   RegisterWSComponent(TCustomTrackBar, TWin32WSTrackBarDark);
+
+  RegisterCustomListView;
+  RegisterWSComponent(TCustomListView, TWin32WSCustomListViewDark);
 
   DrawThemeText:= @DrawThemeTextDark;
   DrawThemeBackground:= @DrawThemeBackgroundDark;

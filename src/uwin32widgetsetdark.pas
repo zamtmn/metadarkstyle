@@ -513,8 +513,8 @@ end;
 function ListViewWindowProc(Window: HWND; Msg: UINT; wParam: Windows.WPARAM; lParam: Windows.LPARAM; uISubClass: UINT_PTR; dwRefData: DWORD_PTR): LRESULT; stdcall;
 var NMHdr: PNMHDR; NMCustomDraw: PNMCustomDraw;
 begin
-  Result := DefSubclassProc(Window, Msg, WParam, LParam);//erase this
-  exit;                                                  //erase this
+  //Result := DefSubclassProc(Window, Msg, WParam, LParam);//erase this
+  //exit;                                                  //erase this
   //we are trying to draw header below
   If Msg = WM_NOTIFY then begin
     NMHdr := PNMHDR(LParam);
@@ -540,11 +540,17 @@ end;
 
 class function TWin32WSCustomListViewDark.CreateHandle(
   const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
+var
+  HeaderHWND:HWND;
 begin
   AWinControl.Color:= SysColor[COLOR_BTNFACE];
   Result:= inherited CreateHandle(AWinControl, AParams);
   SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
   EnableDarkStyle(Result);
+  HeaderHWND:=HWND(SendMessage(Result,LVM_GETHEADER,0,0));
+  AllowDarkModeForWindow(HeaderHWND, True);
+  SetWindowTheme(HeaderHWND,'ItemsView'{'DarkMode_Explorer'}, nil);
+  SendMessageW(HeaderHWND, WM_THEMECHANGED, 0, 0);
 end;
 
 class procedure TWin32WSTrackBarDark.DefaultWndHandler(

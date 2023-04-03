@@ -889,6 +889,8 @@ end;
 }
 function InterceptOpenThemeData(hwnd: hwnd; pszClassList: LPCWSTR): hTheme; stdcall; forward;
 procedure DrawButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
+procedure DrawEdit(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
+
 
 {
   Draws text using the color and font defined by the visual style
@@ -1086,6 +1088,11 @@ begin
       else if Element = teButton then
       begin
         DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+      end
+
+      else if Element = teEdit then
+      begin
+        DrawEdit(hTheme,hdc,iPartId,iStateId,pRect,pClipRect);
       end
 
       else
@@ -1482,6 +1489,31 @@ begin
     LCanvas.Free;
   end;
 end;
+
+procedure DrawEdit(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+var
+  LCanvas: TCanvas;
+begin
+  LCanvas:= TCanvas.Create;
+  try
+    LCanvas.Handle:= HDC;
+
+    // Draw border
+    LCanvas.Brush.Style:= bsClear;
+
+    case iStateId of
+      ETS_NORMAL:LCanvas.Pen.Color:= SysColor[COLOR_GRAYTEXT];
+      ETS_HOT,ETS_FOCUSED,ETS_SELECTED:LCanvas.Pen.Color:= SysColor[COLOR_BTNTEXT];
+      ETS_DISABLED,ETS_READONLY:LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+    end;
+    LCanvas.RoundRect(pRect, 0, 0);
+  finally
+    LCanvas.Handle:= 0;
+    LCanvas.Free;
+  end;
+end;
+
 
 procedure DrawRadionButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
   pClipRect: PRECT);

@@ -8,13 +8,15 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <Libraries Value="E:\lazarus\units\x86_64-win64\win32\"/>
         <OtherUnitFiles Value="src"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Files>
       <Item>
         <Filename Value="src\registermetadarkstyledsgn.pas"/>
+        <HasRegisterProc Value="True"/>
         <UnitName Value="registerMetaDarkStyleDSGN"/>
       </Item>
     </Files>

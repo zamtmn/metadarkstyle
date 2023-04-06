@@ -14,6 +14,8 @@ implementation
 
 procedure Register;
 begin
+  RegisterUnit('registerMetaDarkStyleDSGN', @registerMetaDarkStyleDSGN.Register
+    );
 end;
 
 initialization

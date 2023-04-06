@@ -6,7 +6,10 @@ interface
 
 uses
   Classes, SysUtils,
+  //idecoolbardata,
   uDarkStyleParams, uMetaDarkStyle;
+
+procedure Register;
 
 implementation
 
@@ -16,6 +19,12 @@ begin
   PreferredAppMode:=pamForceDark;
   ApplyMetaDarkStyle;
   {$ENDIF}
+end;
+
+procedure Register;
+begin
+  //if IDECoolBar<>nil then
+  //  IDECoolBar.CoolBar.Themed:=false;
 end;
 
 initialization

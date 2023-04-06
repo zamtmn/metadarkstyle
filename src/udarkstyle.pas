@@ -46,6 +46,7 @@ procedure ApplyDarkStyle;
 
 procedure RefreshTitleBarThemeColor(hWnd: HWND);
 function AllowDarkModeForWindow(hWnd: HWND; allow: bool): bool;
+procedure InitDarkMode;
 
 implementation
 
@@ -260,7 +261,5 @@ begin
 end;
 
 initialization
-  InitDarkMode;
-
 end.
 

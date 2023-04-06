@@ -31,6 +31,7 @@ uses
 
 procedure ApplyDarkStyle;
 procedure DarkFormChanged(Form: TObject);
+procedure Initialize;
 
 implementation
 
@@ -2004,7 +2005,6 @@ begin
 end;
 
 initialization
-  Initialize;
 
 end.
 

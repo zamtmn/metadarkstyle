@@ -19,6 +19,7 @@ type
     Edit1: TEdit;
     GroupBox1: TGroupBox;
     Label1: TLabel;
+    ListView1: TListView;
     MainMenu1: TMainMenu;
     Memo1: TMemo;
     MenuItem1: TMenuItem;

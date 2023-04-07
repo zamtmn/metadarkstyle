@@ -10,6 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
+  uDarkStyleParams,
   uMetaDarkStyle,
   Forms, USharedForm
   { you can add units after this };
@@ -19,6 +20,7 @@ uses
 begin
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
+  PreferredAppMode:=pamAllowDark;
   uMetaDarkStyle.ApplyMetaDarkStyle;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);

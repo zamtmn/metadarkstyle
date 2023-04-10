@@ -92,6 +92,14 @@ type
             const AParams: TCreateParams): HWND; override;
     end;
 
+    { TWin32WSCustomListViewDark }
+
+    TWin32WSCustomListViewDark = class(TWin32WSCustomListView)
+    published
+      class function CreateHandle(const AWinControl: TWinControl;
+            const AParams: TCreateParams): HWND; override;
+    end;
+
     { TWin32WSScrollBoxDark }
 
     TWin32WSScrollBoxDark = class(TWin32WSScrollBox)
@@ -125,20 +133,12 @@ type
       class procedure Popup(const APopupMenu: TPopupMenu; const X, Y: integer); override;
     end;
 
-    { TWin32WSCustomListViewDark }
-
-    TWin32WSCustomListViewDark = class(TWin32WSCustomListView)
-    published
-      class function CreateHandle(const AWinControl: TWinControl;
-            const AParams: TCreateParams): HWND; override;
-    end;
 const
   ID_SUB_SCROLLBOX   = 1;
   ID_SUB_LISTBOX     = 2;
   ID_SUB_COMBOBOX    = 3;
   ID_SUB_STATUSBAR   = 4;
   ID_SUB_TRACKBAR    = 5;
-  ID_SUB_LISTVIEW    = 6;
 
 const
   themelib = 'uxtheme.dll';
@@ -149,6 +149,7 @@ const
   VSCLASS_DARK_BUTTON    = 'DarkMode_Explorer::Button';
   VSCLASS_DARK_COMBOBOX  = 'DarkMode_CFD::Combobox';
   VSCLASS_DARK_SCROLLBAR = 'DarkMode_Explorer::ScrollBar';
+  VSCLASS_DARK_HEADER    = 'Header';
   VSCLASS_PROGRESS_INDER = 'Indeterminate::Progress';
 
 const
@@ -509,51 +510,6 @@ begin
   SetWindowSubclass(Result, @TrackBarWindowProc, ID_SUB_TRACKBAR, 0);
 end;
 
-{ TWin32WSCustomListViewDark }
-
-function ListViewWindowProc(Window: HWND; Msg: UINT; wParam: Windows.WPARAM; lParam: Windows.LPARAM; uISubClass: UINT_PTR; dwRefData: DWORD_PTR): LRESULT; stdcall;
-var NMHdr: PNMHDR; NMCustomDraw: PNMCustomDraw;
-begin
-  //Result := DefSubclassProc(Window, Msg, WParam, LParam);//erase this
-  //exit;                                                  //erase this
-  //we are trying to draw header below
-  If Msg = WM_NOTIFY then begin
-    NMHdr := PNMHDR(LParam);
-    if NMHdr^.code = NM_CUSTOMDRAW then begin
-      NMCustomDraw:= PNMCustomDraw(LParam);
-      case NMCustomDraw^.dwDrawStage of
-        CDDS_PREPAINT:
-        begin
-          Result := CDRF_NOTIFYITEMDRAW;
-          exit;
-        end;
-        CDDS_ITEMPREPAINT:
-        begin
-          SetTextColor(NMCustomDraw^.hdc , SysColor[COLOR_HIGHLIGHTTEXT]);
-          Result := CDRF_NEWFONT;
-          exit;
-        end;
-      end;
-    end;
-  end;
-  Result := DefSubclassProc(Window, Msg, WParam, LParam);
-end;
-
-class function TWin32WSCustomListViewDark.CreateHandle(
-  const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
-var
-  HeaderHWND:HWND;
-begin
-  AWinControl.Color:= SysColor[COLOR_BTNFACE];
-  Result:= inherited CreateHandle(AWinControl, AParams);
-  SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
-  EnableDarkStyle(Result);
-  HeaderHWND:=HWND(SendMessage(Result,LVM_GETHEADER,0,0));
-  AllowDarkModeForWindow(HeaderHWND, True);
-  SetWindowTheme(HeaderHWND,'ItemsView'{'DarkMode_Explorer'}, nil);
-  SendMessageW(HeaderHWND, WM_THEMECHANGED, 0, 0);
-end;
-
 class procedure TWin32WSTrackBarDark.DefaultWndHandler(
   const AWinControl: TWinControl; var AMessage);
 var
@@ -756,6 +712,20 @@ begin
   AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];
 end;
 
+{ TWin32WSCustomListViewDark }
+
+class function TWin32WSCustomListViewDark.CreateHandle(
+  const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
+var
+  P: TCreateParams;
+begin
+  P:= AParams;
+  P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
+  TCustomListView(AWinControl).BorderStyle:= bsNone;
+  Result:= inherited CreateHandle(AWinControl, P);
+  EnableDarkStyle(Result);
+end;
+
 { TWin32WSCustomMemoDark }
 
 class function TWin32WSCustomMemoDark.CreateHandle(
@@ -855,7 +825,7 @@ begin
     LCanvas:= TCanvas.Create;
     try
       LCanvas.Handle:= DC;
-      LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+      LCanvas.Brush.Color:= SysColor[COLOR_MENUBAR];
       LCanvas.FillRect(ps.rcPaint);
 
       X:= 1;
@@ -863,15 +833,10 @@ begin
       for Index:= 0 to StatusBar.Panels.Count - 1 do
       begin
         APanel:= StatusBar.Panels[Index];
-        LCanvas.TextOut(X, 1, APanel.Text);
+        LCanvas.TextOut(X+1, (StatusBar.Height - LCanvas.TextHeight('Ag')) div 2, APanel.Text);
         X+= APanel.Width;
-        {
-        LCanvas.Pen.Color:=  Darker(RGBToColor(53, 53, 53), 120);
-        LCanvas.Line(x-1, ps.rcPaint.Top, x-1, ps.rcPaint.Bottom);
-
-        LCanvas.Pen.Color:=  Lighter(RGBToColor(53, 53, 53), 154);
+        LCanvas.Pen.Color:= SysColor[COLOR_BTNFACE];
         LCanvas.Line(x-2, ps.rcPaint.Top, x-2, ps.rcPaint.Bottom);
-        }
       end;
     finally
       LCanvas.Handle:= 0;
@@ -950,8 +915,7 @@ begin
     if Theme[Index] = hTheme then
     begin
       Element:= Index;
-      if Element = teHeader then
-      begin
+      if Element = teHeader then begin
         if iPartId in [HP_HEADERITEM, HP_HEADERITEMRIGHT] then
         begin
           LCanvas:= TCanvas.Create;
@@ -983,14 +947,42 @@ begin
             LCanvas.Free;
           end;
         end;
-      end
+      end else if Element = teListView then begin
+        if iPartId in [HP_HEADERITEM, HP_HEADERITEMRIGHT] then
+        begin
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            AColor:= {RGBToColor(95, 95, 95);} SysColor[COLOR_BTNFACE];
 
-      else if Element = teMenu then
-      begin
+            if iStateId in [HIS_HOT, HIS_SORTEDHOT, HIS_ICONHOT, HIS_ICONSORTEDHOT] then
+              FillGradient(hdc, Lighter(AColor, 174), Lighter(AColor, 166), pRect, GRADIENT_FILL_RECT_V)
+            else
+              FillGradient(hdc, Lighter(AColor, 124), Lighter(AColor, 116), pRect, GRADIENT_FILL_RECT_V);
+
+            if (iPartId <> HP_HEADERITEMRIGHT) then
+            begin
+              LCanvas.Pen.Color:= Lighter(AColor, 101);
+              LCanvas.Line(pRect.Right - 1, pRect.Top, pRect.Right - 1, pRect.Bottom);
+
+              LCanvas.Pen.Color:= Lighter(AColor, 131);
+              LCanvas.Line(pRect.Right - 2, pRect.Top, pRect.Right - 2, pRect.Bottom);
+            end;
+            // Top line
+            LCanvas.Pen.Color:= Lighter(AColor, 131);
+            LCanvas.Line(pRect.Left, pRect.Top, pRect.Right, pRect.Top);
+            // Bottom line
+            LCanvas.Pen.Color:= Darker(AColor, 140);
+            LCanvas.Line(pRect.Left, pRect.Bottom - 1, pRect.Right, pRect.Bottom - 1);
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end;
+      end else if Element = teMenu then begin
         if iPartId in [MENU_BARBACKGROUND, MENU_POPUPITEM, MENU_POPUPGUTTER,
                        MENU_POPUPSUBMENU, MENU_POPUPSEPARATOR, MENU_POPUPCHECK,
-                       MENU_POPUPCHECKBACKGROUND] then
-        begin
+                       MENU_POPUPCHECKBACKGROUND] then begin
           LCanvas:= TCanvas.Create;
           try
             LCanvas.Handle:= hdc;
@@ -1047,11 +1039,8 @@ begin
             LCanvas.Free;
           end;
         end;
-      end
-
-      else if Element = teToolBar then
-      begin
-        if iPartId in [TP_BUTTON] then
+      end else if Element = teToolBar then begin
+        if iPartId in [TP_BUTTON, TP_SPLITBUTTON, TP_SPLITBUTTONDROPDOWN] then
         begin
           LCanvas:= TCanvas.Create;
           try
@@ -1067,47 +1056,46 @@ begin
             end;
             LCanvas.FillRect(pRect);
 
-           if iStateId <> TS_NORMAL then
-           begin
-             if iStateId = TS_CHECKED then
-             begin
-               LRect:= pRect;
-               InflateRect(LRect, -2, -2);
-               LCanvas.Brush.Color:= Lighter(AColor, 146);
-               LCanvas.FillRect(LRect);
-             end;
+            if iStateId <> TS_NORMAL then begin
+              if iStateId = TS_CHECKED then begin
+                LRect:= pRect;
+                InflateRect(LRect, -2, -2);
+                LCanvas.Brush.Color:= Lighter(AColor, 146);
+                LCanvas.FillRect(LRect);
+              end;
 
-             LCanvas.Pen.Color:= Darker(AColor, 140);
-             LCanvas.RoundRect(pRect, 6, 6);
+              LCanvas.Pen.Color:= Darker(AColor, 140);
+              LCanvas.RoundRect(pRect, 6, 6);
 
-             LRect:= pRect;
+              LRect:= pRect;
 
-             LCanvas.Pen.Color:= Lighter(AColor, 140);
-             InflateRect(LRect, -1, -1);
-             LCanvas.RoundRect(LRect, 6, 6);
-           end;
+              LCanvas.Pen.Color:= Lighter(AColor, 140);
+              InflateRect(LRect, -1, -1);
+              LCanvas.RoundRect(LRect, 6, 6);
+            end;
+
           finally
             LCanvas.Handle:= 0;
             LCanvas.Free;
           end;
         end;
-      end
-
-      else if Element = teButton then
-      begin
-        DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-      end
-
+        if iPartId = TP_SPLITBUTTONDROPDOWN then
+        begin
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            DrawUpDownArrow(hDC, LCanvas, pRect, udBottom);
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end;
+      end else if Element = teButton then
+        DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect)
       else if Element = teEdit then
-      begin
-        DrawEdit(hTheme,hdc,iPartId,iStateId,pRect,pClipRect);
-      end
-
+        DrawEdit(hTheme,hdc,iPartId,iStateId,pRect,pClipRect)
       else if Element = teRebar then
-      begin
-        DrawRebar(hTheme,hdc,iPartId,iStateId,pRect,pClipRect);
-      end
-
+        DrawRebar(hTheme,hdc,iPartId,iStateId,pRect,pClipRect)
       else
         TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
       exit(S_OK);
@@ -1400,6 +1388,9 @@ begin
   WSStdCtrls.RegisterCustomListBox;
   RegisterWSComponent(TCustomListBox, TWin32WSCustomListBoxDark);
 
+  WSComCtrls.RegisterCustomListView;
+  RegisterWSComponent(TCustomListView, TWin32WSCustomListViewDark);
+
   WSForms.RegisterScrollingWinControl;
 
   WSForms.RegisterCustomForm;
@@ -1414,9 +1405,6 @@ begin
 
   RegisterCustomTrackBar;
   RegisterWSComponent(TCustomTrackBar, TWin32WSTrackBarDark);
-
-  RegisterCustomListView;
-  RegisterWSComponent(TCustomListView, TWin32WSCustomListViewDark);
 
   DrawThemeText:= @DrawThemeTextDark;
   DrawThemeBackground:= @DrawThemeBackgroundDark;
@@ -1715,6 +1703,12 @@ begin
   end;
 end;
 
+procedure DrawListViewHeader(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+begin
+  DrawThemeBackgroundDark(Theme[teListView], hdc, iPartId, iStateId, pRect, pClipRect);
+end;
+
 function InterceptOpenThemeData(hwnd: hwnd; pszClassList: LPCWSTR): hTheme; stdcall;
 var
   P: LONG_PTR;
@@ -1750,6 +1744,14 @@ begin
     AllowDarkStyle(hwnd);
     pszClassList:= PWideChar(VSCLASS_DARK_COMBOBOX);
   end
+
+  else if lstrcmpiW(pszClassList, 'ListView') = 0 then
+  begin
+    ListView_SetBkColor(hwnd, SysColor[COLOR_WINDOW]);
+    ListView_SetTextBkColor(hwnd, SysColor[COLOR_WINDOW]);
+    ListView_SetTextColor(hwnd, SysColor[COLOR_WINDOWTEXT]);
+  end
+
   else if lstrcmpiW(pszClassList, VSCLASS_SCROLLBAR) = 0 then
   begin
     AllowDarkStyle(hwnd);
@@ -1829,6 +1831,10 @@ begin
       begin
         DrawProgressBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
       end
+      else if SameText(ClassName, VSCLASS_DARK_HEADER) then
+      begin
+        DrawListViewHeader(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+      end
       else begin
         Result:= TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
       end;
@@ -1885,24 +1891,24 @@ begin
   SysColor[COLOR_MENU]                    := RGBToColor(42, 42, 42);
   SysColor[COLOR_WINDOW]                  := RGBToColor(42, 42, 42);
   SysColor[COLOR_WINDOWFRAME]             := RGBToColor(20, 20, 20);
-  SysColor[COLOR_MENUTEXT]                := RGBToColor(255, 255, 255);
-  SysColor[COLOR_WINDOWTEXT]              := RGBToColor(255, 255, 255);
-  SysColor[COLOR_CAPTIONTEXT]             := RGBToColor(255, 255, 255);
+  SysColor[COLOR_MENUTEXT]                := RGBToColor(245, 245, 245);
+  SysColor[COLOR_WINDOWTEXT]              := RGBToColor(245, 245, 245);
+  SysColor[COLOR_CAPTIONTEXT]             := RGBToColor(245, 245, 245);
   SysColor[COLOR_ACTIVEBORDER]            := RGBToColor(53, 53, 53);
   SysColor[COLOR_INACTIVEBORDER]          := RGBToColor(53, 53, 53);
   SysColor[COLOR_APPWORKSPACE]            := RGBToColor(53, 53, 53);
   SysColor[COLOR_HIGHLIGHT]               := RGBToColor(42, 130, 218);
-  SysColor[COLOR_HIGHLIGHTTEXT]           := RGBToColor(255, 255, 255);
+  SysColor[COLOR_HIGHLIGHTTEXT]           := RGBToColor(245, 245, 245);
   SysColor[COLOR_BTNFACE]                 := RGBToColor(53, 53, 53);
   SysColor[COLOR_BTNSHADOW]               := RGBToColor(35, 35, 35);
   SysColor[COLOR_GRAYTEXT]                := RGBToColor(160, 160, 160);
-  SysColor[COLOR_BTNTEXT]                 := RGBToColor(255, 255, 255);
-  SysColor[COLOR_INACTIVECAPTIONTEXT]     := RGBToColor(255, 255, 255);
+  SysColor[COLOR_BTNTEXT]                 := RGBToColor(245, 245, 245);
+  SysColor[COLOR_INACTIVECAPTIONTEXT]     := RGBToColor(245, 245, 245);
   SysColor[COLOR_BTNHIGHLIGHT]            := RGBToColor(66, 66, 66);
   SysColor[COLOR_3DDKSHADOW]              := RGBToColor(20, 20, 20);
   SysColor[COLOR_3DLIGHT]                 := RGBToColor(40, 40, 40);
   SysColor[COLOR_INFOTEXT]                := RGBToColor(53, 53, 53);
-  SysColor[COLOR_INFOBK]                  := RGBToColor(255, 255, 255);
+  SysColor[COLOR_INFOBK]                  := RGBToColor(245, 245, 245);
   SysColor[COLOR_HOTLIGHT]                := RGBToColor(66, 66, 66);
   SysColor[COLOR_GRADIENTACTIVECAPTION]   := GetSysColor(COLOR_GRADIENTACTIVECAPTION);
   SysColor[COLOR_GRADIENTINACTIVECAPTION] := GetSysColor(COLOR_GRADIENTINACTIVECAPTION);

@@ -139,6 +139,7 @@ const
   ID_SUB_COMBOBOX    = 3;
   ID_SUB_STATUSBAR   = 4;
   ID_SUB_TRACKBAR    = 5;
+  ID_SUB_LISTVIEW    = 6;
 
 const
   themelib = 'uxtheme.dll';
@@ -714,6 +715,31 @@ end;
 
 { TWin32WSCustomListViewDark }
 
+function ListViewWindowProc(Window: HWND; Msg: UINT; wParam: Windows.WPARAM; lParam: Windows.LPARAM; uISubClass: UINT_PTR; dwRefData: DWORD_PTR): LRESULT; stdcall;
+var NMHdr: PNMHDR; NMCustomDraw: PNMCustomDraw;
+begin
+  If Msg = WM_NOTIFY then begin
+    NMHdr := PNMHDR(LParam);
+    if NMHdr^.code = NM_CUSTOMDRAW then begin
+      NMCustomDraw:= PNMCustomDraw(LParam);
+      case NMCustomDraw^.dwDrawStage of
+        CDDS_PREPAINT:
+        begin
+          Result := CDRF_NOTIFYITEMDRAW;
+          exit;
+        end;
+        CDDS_ITEMPREPAINT:
+        begin
+          SetTextColor(NMCustomDraw^.hdc , SysColor[COLOR_HIGHLIGHTTEXT]);
+          Result := CDRF_NEWFONT;
+          exit;
+        end;
+      end;
+    end;
+  end;
+  Result := DefSubclassProc(Window, Msg, WParam, LParam);
+end;
+
 class function TWin32WSCustomListViewDark.CreateHandle(
   const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
 var
@@ -723,6 +749,7 @@ begin
   P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
   TCustomListView(AWinControl).BorderStyle:= bsNone;
   Result:= inherited CreateHandle(AWinControl, P);
+  SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
   EnableDarkStyle(Result);
 end;
 

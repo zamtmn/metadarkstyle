@@ -833,10 +833,14 @@ begin
       for Index:= 0 to StatusBar.Panels.Count - 1 do
       begin
         APanel:= StatusBar.Panels[Index];
-        LCanvas.TextOut(X+1, (StatusBar.Height - LCanvas.TextHeight('Ag')) div 2, APanel.Text);
-        X+= APanel.Width;
-        LCanvas.Pen.Color:= SysColor[COLOR_BTNFACE];
-        LCanvas.Line(x-2, ps.rcPaint.Top, x-2, ps.rcPaint.Bottom);
+        if APanel.Width>0 then begin
+          LCanvas.TextOut(X+1, (StatusBar.Height - LCanvas.TextHeight('Ag')) div 2, APanel.Text);
+          if Index<>(StatusBar.Panels.Count - 1)then begin
+            X+= APanel.Width;
+            LCanvas.Pen.Color:= SysColor[COLOR_BTNFACE];
+            LCanvas.Line(x-2, ps.rcPaint.Top, x-2, ps.rcPaint.Bottom);
+          end;
+        end;
       end;
     finally
       LCanvas.Handle:= 0;

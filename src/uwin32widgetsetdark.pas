@@ -878,20 +878,27 @@ var
   OldColor: COLORREF;
   Index, Element: TThemedElement;
 begin
+  OldColor:= GetTextColor(hdc);
   for Index:= Low(TThemedElement) to High(TThemedElement) do
   begin
     if Theme[Index] = hTheme then
     begin
       Element:= Index;
+
+      if Element = teToolTip then
+        OldColor:= SysColor[COLOR_INFOTEXT]
+      else if Element = teMenu then begin
+        if iStateId in [MBI_PUSHED,MBI_DISABLED,MBI_DISABLEDHOT,MBI_DISABLEDPUSHED] then
+          OldColor:= SysColor[COLOR_GRAYTEXT]
+        else
+          OldColor:= SysColor[COLOR_BTNTEXT]
+      end else
+        OldColor:= SysColor[COLOR_BTNTEXT];
+
       Break;
     end;
   end;
 
-  if Element = teToolTip then
-    OldColor:= SysColor[COLOR_INFOTEXT]
-  else begin
-    OldColor:= SysColor[COLOR_BTNTEXT];
-  end;
   OldColor:= SetTextColor(hdc, OldColor);
   SetBkMode(hdc, TRANSPARENT);
 

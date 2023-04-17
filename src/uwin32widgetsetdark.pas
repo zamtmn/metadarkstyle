@@ -1043,7 +1043,7 @@ begin
               LCanvas.Brush.Style:= bsClear;
               LCanvas.Font.Name:= 'Segoe MDL2 Assets';
               LCanvas.Font.Color:= RGBToColor(212, 212, 212);
-              LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_CHECKED, AStyle);
+              LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_CHECKED, AStyle);
             end;
 
             if iPartId = MENU_POPUPSEPARATOR then
@@ -1500,7 +1500,7 @@ begin
     // Fill checkbox rect
     LCanvas.Font.Name:= 'Segoe MDL2 Assets';
     LCanvas.Font.Color:= SysColor[COLOR_WINDOW];
-    LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_FILLED, AStyle);
+    LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_FILLED, AStyle);
 
     // Draw checkbox border
     if iStateId in [CBS_UNCHECKEDHOT, CBS_MIXEDHOT, CBS_CHECKEDHOT] then
@@ -1508,20 +1508,20 @@ begin
     else begin
       LCanvas.Font.Color:= RGBToColor(192, 192, 192);
     end;
-    LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_OUTLINE, AStyle);
+    LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_OUTLINE, AStyle);
 
     // Draw checkbox state
     if iStateId in [CBS_MIXEDNORMAL, CBS_MIXEDHOT,
                     CBS_MIXEDPRESSED, CBS_MIXEDDISABLED] then
     begin
       LCanvas.Font.Color:= RGBToColor(120, 120, 120);
-      LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_GRAYED, AStyle);
+      LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_GRAYED, AStyle);
     end
     else if iStateId in [CBS_CHECKEDNORMAL, CBS_CHECKEDHOT,
                          CBS_CHECKEDPRESSED, CBS_CHECKEDDISABLED] then
     begin
       LCanvas.Font.Color:= RGBToColor(192, 192, 192);
-      LCanvas.TextRect(pRect, 0, 0, MDL_CHECKBOX_CHECKED, AStyle);
+      LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_CHECKED, AStyle);
     end;
   finally
     LCanvas.Handle:= 0;
@@ -1595,14 +1595,14 @@ begin
     // Draw radio circle
     LCanvas.Font.Name:= 'Segoe MDL2 Assets';
     LCanvas.Font.Color:= SysColor[COLOR_WINDOW];
-    LCanvas.TextRect(pRect, 0, 0, MDL_RADIO_FILLED, AStyle);
+    LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_FILLED, AStyle);
 
     // Draw radio button state
     if iStateId in [RBS_CHECKEDNORMAL, RBS_CHECKEDHOT,
                     RBS_CHECKEDPRESSED, RBS_CHECKEDDISABLED] then
     begin
       LCanvas.Font.Color:= RGBToColor(192, 192, 192);
-      LCanvas.TextRect(pRect, 0, 0, MDL_RADIO_CHECKED, AStyle );
+      LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_CHECKED, AStyle );
     end;
 
     // Set outline circle color
@@ -1614,7 +1614,7 @@ begin
       LCanvas.Font.Color:= RGBToColor(192, 192, 192);
     end;
     // Draw outline circle
-    LCanvas.TextRect(pRect, 0, 0, MDL_RADIO_OUTLINE, AStyle);
+    LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_OUTLINE, AStyle);
   finally
     LCanvas.Handle:= 0;
     LCanvas.Free;

@@ -27,6 +27,7 @@ end;
 
 procedure Register;
 begin
+  //exit;
   // add options frame
   MetaDarkStyleOptionsID:=RegisterIDEOptionsEditor(GroupEnvironment,
                                                    TDarkStyleDSGNOptionsFrame,

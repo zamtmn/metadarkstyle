@@ -1,0 +1,12 @@
+object DarkStyleDSGNOptionsFrame: TDarkStyleDSGNOptionsFrame
+  Left = 0
+  Height = 360
+  Top = 0
+  Width = 480
+  DesignTimePPI = 144
+  ParentBackground = False
+  ParentFont = False
+  TabOrder = 0
+  DesignLeft = 556
+  DesignTop = 10
+end

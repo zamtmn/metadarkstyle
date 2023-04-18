@@ -6,8 +6,12 @@ interface
 
 uses
   Classes, SysUtils,
-  //idecoolbardata,
-  uDarkStyleParams, uMetaDarkStyle;
+  IDEOptionsIntf, IDEOptEditorIntf,
+  uDarkStyleParams, uMetaDarkStyle, MetaDarkStyleDSGNOptionsFrame;
+
+var
+  MetaDarkStyleOptionsID: integer = 1000;
+
 
 procedure Register;
 
@@ -23,8 +27,10 @@ end;
 
 procedure Register;
 begin
-  //if IDECoolBar<>nil then
-  //  IDECoolBar.CoolBar.Themed:=false;
+  // add options frame
+  MetaDarkStyleOptionsID:=RegisterIDEOptionsEditor(GroupEnvironment,
+                                                   TDarkStyleDSGNOptionsFrame,
+                                                   MetaDarkStyleOptionsID)^.Index;
 end;
 
 initialization

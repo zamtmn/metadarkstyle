@@ -19,8 +19,15 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="registerMetaDarkStyleDSGN"/>
       </Item>
+      <Item>
+        <Filename Value="src\metadarkstyledsgnoptionsframe.pas"/>
+        <UnitName Value="MetaDarkStyleDSGNOptionsFrame"/>
+      </Item>
     </Files>
     <RequiredPkgs>
+      <Item>
+        <PackageName Value="IDEIntf"/>
+      </Item>
       <Item>
         <PackageName Value="MetaDarkStyle"/>
       </Item>

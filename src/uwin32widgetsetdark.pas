@@ -166,11 +166,11 @@ const
   MDL_CHECKBOX_OUTLINE = #$EE#$9C#$B9; // $E739
 
 type
-  TThemeClassMap = specialize TDictionary<HTHEME, String>;
+  TThemeClassMap = specialize TDictionary<HTHEME, LPCWSTR>;
 
 var
   Theme: TThemeData;
-  ThemeClass: TThemeClassMap;
+  ThemeClass: TThemeClassMap = nil;
   OldUpDownWndProc: Windows.WNDPROC;
   CustomFormWndProc: Windows.WNDPROC;
   SysColor: array[0..COLOR_ENDCOLORS] of TColor;
@@ -1804,45 +1804,46 @@ function InterceptDrawThemeText(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Int
   dwTextFlags, dwTextFlags2: DWORD; const pRect: TRect): HRESULT; stdcall;
 var
   OldColor: COLORREF;
-  ClassName: String;
+  ClassName: LPCWSTR;
 begin
-  if ThemeClass.TryGetValue(hTheme, ClassName) then
-  begin
-    if SameText(ClassName, VSCLASS_DARK_COMBOBOX) or SameText(ClassName, VSCLASS_DARK_EDIT) then
+  if Assigned(ThemeClass) then
+    if ThemeClass.TryGetValue(hTheme, ClassName) then
     begin
-      Result:= TrampolineDrawThemeText(hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
-      Exit;
-    end;
-
-    if SameText(ClassName, VSCLASS_TOOLTIP) then
-      OldColor:= SysColor[COLOR_INFOTEXT]
-    else begin
-      OldColor:= SysColor[COLOR_BTNTEXT];
-    end;
-
-    if SameText(ClassName, VSCLASS_DARK_BUTTON) then
-    begin
-      if (iPartId = BP_CHECKBOX) and (iStateId in [CBS_UNCHECKEDDISABLED, CBS_CHECKEDDISABLED, CBS_MIXEDDISABLED]) then
-        OldColor:= SysColor[COLOR_GRAYTEXT]
-      else if (iPartId = BP_RADIOBUTTON) and (iStateId in [RBS_UNCHECKEDDISABLED, RBS_CHECKEDDISABLED]) then
-        OldColor:= SysColor[COLOR_GRAYTEXT]
-      else if (iPartId = BP_GROUPBOX) and (iStateId = GBS_DISABLED) then
-        OldColor:= SysColor[COLOR_GRAYTEXT]
-      else if (iPartId = BP_PUSHBUTTON) then
+      if SameText(ClassName, VSCLASS_DARK_COMBOBOX) or SameText(ClassName, VSCLASS_DARK_EDIT) then
       begin
         Result:= TrampolineDrawThemeText(hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
         Exit;
       end;
-    end;
 
-    OldColor:= SetTextColor(hdc, OldColor);
-    SetBkMode(hdc, TRANSPARENT);
+      if SameText(ClassName, VSCLASS_TOOLTIP) then
+        OldColor:= SysColor[COLOR_INFOTEXT]
+      else begin
+        OldColor:= SysColor[COLOR_BTNTEXT];
+      end;
 
-    DrawTextExW(hdc, pszText, iCharCount, @pRect, dwTextFlags, nil);
+      if SameText(ClassName, VSCLASS_DARK_BUTTON) then
+      begin
+        if (iPartId = BP_CHECKBOX) and (iStateId in [CBS_UNCHECKEDDISABLED, CBS_CHECKEDDISABLED, CBS_MIXEDDISABLED]) then
+          OldColor:= SysColor[COLOR_GRAYTEXT]
+        else if (iPartId = BP_RADIOBUTTON) and (iStateId in [RBS_UNCHECKEDDISABLED, RBS_CHECKEDDISABLED]) then
+          OldColor:= SysColor[COLOR_GRAYTEXT]
+        else if (iPartId = BP_GROUPBOX) and (iStateId = GBS_DISABLED) then
+          OldColor:= SysColor[COLOR_GRAYTEXT]
+        else if (iPartId = BP_PUSHBUTTON) then
+        begin
+          Result:= TrampolineDrawThemeText(hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
+          Exit;
+        end;
+      end;
 
-    SetTextColor(hdc, OldColor);
+      OldColor:= SetTextColor(hdc, OldColor);
+      SetBkMode(hdc, TRANSPARENT);
 
-    Exit(S_OK);
+      DrawTextExW(hdc, pszText, iCharCount, @pRect, dwTextFlags, nil);
+
+      SetTextColor(hdc, OldColor);
+
+      Exit(S_OK);
   end;
   Result:= TrampolineDrawThemeText(hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
 end;
@@ -1851,36 +1852,37 @@ function InterceptDrawThemeBackground(hTheme: hTheme; hdc: hdc; iPartId, iStateI
     pClipRect: Pointer): HRESULT; stdcall;
 var
   Index: Integer;
-  ClassName: String;
+  ClassName: LPCWSTR;
 begin
-  if ThemeClass.TryGetValue(hTheme, ClassName) then
-  begin
-    Index:= SaveDC(hdc);
-    try
-      if SameText(ClassName, VSCLASS_DARK_BUTTON) then
-      begin
-        DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-      end
-      else if SameText(ClassName, VSCLASS_DARK_TAB) then
-      begin
-        DrawTabControl(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-      end
-      else if SameText(ClassName, VSCLASS_PROGRESS) or SameText(ClassName, VSCLASS_PROGRESS_INDER) then
-      begin
-        DrawProgressBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-      end
-      else if SameText(ClassName, VSCLASS_DARK_HEADER) then
-      begin
-        DrawListViewHeader(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
-      end
-      else begin
-        Result:= TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+  if assigned(ThemeClass)then
+    if ThemeClass.TryGetValue(hTheme, ClassName) then
+    begin
+      Index:= SaveDC(hdc);
+      try
+        if SameText(ClassName, VSCLASS_DARK_BUTTON) then
+        begin
+          DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else if SameText(ClassName, VSCLASS_DARK_TAB) then
+        begin
+          DrawTabControl(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else if SameText(ClassName, VSCLASS_PROGRESS) or SameText(ClassName, VSCLASS_PROGRESS_INDER) then
+        begin
+          DrawProgressBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else if SameText(ClassName, VSCLASS_DARK_HEADER) then
+        begin
+          DrawListViewHeader(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else begin
+          Result:= TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end;
+      finally
+        RestoreDC(hdc, Index);
       end;
-    finally
-      RestoreDC(hdc, Index);
+      Exit(S_OK);
     end;
-    Exit(S_OK);
-  end;
   Result:= TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
 end;
 
@@ -2077,5 +2079,8 @@ end;
 
 initialization
 
+finalization
+  if Assigned(ThemeClass) then
+    FreeAndNil(ThemeClass);
 end.
 

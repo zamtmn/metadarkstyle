@@ -6,8 +6,9 @@ interface
 
 uses
   Classes, SysUtils,
-  IDEOptionsIntf, IDEOptEditorIntf,
-  uDarkStyleParams, uMetaDarkStyle, MetaDarkStyleDSGNOptionsFrame;
+  IDEOptionsIntf, IDEOptEditorIntf, EnvironmentOpts, LazIDEIntf,
+  uDarkStyleParams, uMetaDarkStyle,
+  MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions;
 
 var
   MetaDarkStyleOptionsID: integer = 1000;
@@ -17,24 +18,33 @@ procedure Register;
 
 implementation
 
+function AppModeOpt2PreferredAppMode(am:TAppModeOpt):TPreferredAppMode;
+begin
+  case am of
+    amOptAllowDark:result:=pamAllowDark;
+    amOptForceDark:result:=pamForceDark;
+   amOptForceLight:result:=pamForceLight;
+  end;
+end;
+
 procedure SetDarkStyle;
 begin
-  {$IF DEFINED(MSWINDOWS)}
-  PreferredAppMode:=pamForceDark;
+ {$IF DEFINED(MSWINDOWS)}
+  MetaDarkStyleDSGNOpt:=TMetaDarkStyleDSGNOptions.Create;
+  MetaDarkStyleDSGNOpt.LoadSafe;
+  PreferredAppMode:=AppModeOpt2PreferredAppMode(MetaDarkStyleDSGNOpt.AppMode);
   ApplyMetaDarkStyle;
-  {$ENDIF}
+ {$ENDIF}
 end;
 
 procedure Register;
 begin
-  //exit;
-  // add options frame
   MetaDarkStyleOptionsID:=RegisterIDEOptionsEditor(GroupEnvironment,
                                                    TDarkStyleDSGNOptionsFrame,
                                                    MetaDarkStyleOptionsID)^.Index;
 end;
 
 initialization
-  SetDarkStyle;
+  AddBootHandler(libhEnvironmentOptionsLoaded,@SetDarkStyle);
 end.
 

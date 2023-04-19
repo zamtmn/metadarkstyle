@@ -5,15 +5,21 @@ unit MetaDarkStyleDSGNOptionsFrame;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls,
-  IDEOptionsIntf,IDEOptEditorIntf;
+  Classes, SysUtils, Forms, Controls, StdCtrls,
+  IDEOptionsIntf,IDEOptEditorIntf,
+  MetaDarkStyleDSGNOptions;
 
 resourceString
   RSDarkStyleDSGNOptionsFrame='Dark style';
 
 
 type
+
+  { TDarkStyleDSGNOptionsFrame }
+
   TDarkStyleDSGNOptionsFrame = class(TAbstractIDEOptionsEditor)
+    ComboBox1: TComboBox;
+    Label1: TLabel;
   private
 
   public
@@ -35,19 +41,29 @@ begin
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.Setup({%H-}ADialog: TAbstractOptionsEditorDialog);
+var
+  i:TAppModeOpt;
 begin
+  ComboBox1.Items.Clear;
+  for i:=low(AppModeOptStr) to high(AppModeOptStr) do
+    ComboBox1.Items.Add(AppModeOptLocalizedStr[i]);
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.ReadSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
+  RestoreSettings(AOptions);
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.WriteSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
+  MetaDarkStyleDSGNOpt.AppMode:=TAppModeOpt(ComboBox1.ItemIndex);
+  if MetaDarkStyleDSGNOpt.Modified then
+    MetaDarkStyleDSGNOpt.SaveSafe;
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.RestoreSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
+  ComboBox1.ItemIndex:=ord(MetaDarkStyleDSGNOpt.AppMode);
 end;
 
 class function TDarkStyleDSGNOptionsFrame.SupportedOptionsClass: TAbstractIDEOptionsClass;

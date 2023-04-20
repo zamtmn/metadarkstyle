@@ -26,9 +26,6 @@
     </Files>
     <RequiredPkgs>
       <Item>
-        <PackageName Value="IdeConfig"/>
-      </Item>
-      <Item>
         <PackageName Value="IDEIntf"/>
       </Item>
       <Item>

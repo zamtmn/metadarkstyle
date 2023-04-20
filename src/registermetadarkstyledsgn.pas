@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils,
-  IDEOptionsIntf, IDEOptEditorIntf, EnvironmentOpts, LazIDEIntf,
+  IDEOptionsIntf, IDEOptEditorIntf, LazIDEIntf,
   uDarkStyleParams, uMetaDarkStyle,
   MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions;
 

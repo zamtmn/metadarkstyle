@@ -322,21 +322,25 @@ procedure SetControlColors(Control: TControl; Canvas: HDC);
 var
   Color: TColor;
 begin
-  // Set background color
-  Color:= Control.Color;
-  if Color = clDefault then
-  begin
-    Color:= Control.GetDefaultColor(dctBrush);
-  end;
-  SetBkColor(Canvas, ColorToRGB(Color));
+  if not (csDesigning in Control.ComponentState) then begin
 
-  // Set text color
-  Color:= Control.Font.Color;
-  if Color = clDefault then
-  begin
-    Color:= Control.GetDefaultColor(dctFont);
+    // Set background color
+    Color:= Control.Color;
+    if Color = clDefault then
+    begin
+      Color:= Control.GetDefaultColor(dctBrush);
+    end;
+    SetBkColor(Canvas, ColorToRGB(Color));
+
+    // Set text color
+    Color:= Control.Font.Color;
+    if Color = clDefault then
+    begin
+      Color:= Control.GetDefaultColor(dctFont);
+    end;
+    SetTextColor(Canvas, ColorToRGB(Color));
+
   end;
-  SetTextColor(Canvas, ColorToRGB(Color));
 end;
 
 { TWin32WSUpDownControlDark }
@@ -588,10 +592,12 @@ class function TWin32WSScrollBoxDark.CreateHandle(
   const AWinControl: TWinControl; const AParams: TCreateParams): HWND;
 begin
   Result:= inherited CreateHandle(AWinControl, AParams);
-  if TScrollBox(AWinControl).BorderStyle = bsSingle then begin
-    SetWindowSubclass(Result, @ScrollBoxWindowProc, ID_SUB_SCROLLBOX, 0);
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    if TScrollBox(AWinControl).BorderStyle = bsSingle then begin
+      SetWindowSubclass(Result, @ScrollBoxWindowProc, ID_SUB_SCROLLBOX, 0);
+    end;
+    EnableDarkStyle(Result);
   end;
-  EnableDarkStyle(Result);
 end;
 
 { TWin32WSPopupMenuDark }
@@ -612,20 +618,26 @@ var
   P: TCreateParams;
 begin
   P:= AParams;
-  if (AWinControl is TCustomTreeView) then
-  begin
-    AWinControl.Color:= SysColor[COLOR_WINDOW];
-    with TCustomTreeView(AWinControl) do
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    if (AWinControl is TCustomTreeView) then
     begin
-      ExpandSignType:= tvestPlusMinus;
-      TreeLineColor:= SysColor[COLOR_GRAYTEXT];
-      ExpandSignColor:= SysColor[COLOR_GRAYTEXT];
+      AWinControl.Color:= SysColor[COLOR_WINDOW];
+      with TCustomTreeView(AWinControl) do
+      begin
+        ExpandSignType:= tvestPlusMinus;
+        TreeLineColor:= SysColor[COLOR_GRAYTEXT];
+        ExpandSignColor:= SysColor[COLOR_GRAYTEXT];
+      end;
     end;
+    P.ExStyle:= p.ExStyle and not WS_EX_CLIENTEDGE;
+    TWinControlDark(AWinControl).BorderStyle:= bsNone;
   end;
-  P.ExStyle:= p.ExStyle and not WS_EX_CLIENTEDGE;
-  TWinControlDark(AWinControl).BorderStyle:= bsNone;
+
   Result:= inherited CreateHandle(AWinControl, P);
-  EnableDarkStyle(Result);
+
+  if not (csDesigning in AWinControl.ComponentState) then begin
+     EnableDarkStyle(Result);
+  end;
 end;
 
 { TWin32WSCustomFormDark }
@@ -663,20 +675,24 @@ class function TWin32WSCustomFormDark.CreateHandle(
 var
   Info: PWin32WindowInfo;
 begin
-  AWinControl.DoubleBuffered:= True;
-  AWinControl.Color:= SysColor[COLOR_BTNFACE];
-  AWinControl.Brush.Color:= SysColor[COLOR_BTNFACE];
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    AWinControl.DoubleBuffered:= True;
+    AWinControl.Color:= SysColor[COLOR_BTNFACE];
+    AWinControl.Brush.Color:= SysColor[COLOR_BTNFACE];
+  end;
 
   Result:= inherited CreateHandle(AWinControl, AParams);
 
-  Info:= GetWin32WindowInfo(Result);
+    Info:= GetWin32WindowInfo(Result);
 
-  Info^.DefWndProc:= @WindowProc;
+    Info^.DefWndProc:= @WindowProc;
 
-  CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtr(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
+    CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtr(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
 
-  AWinControl.Color:= SysColor[COLOR_BTNFACE];
-  AWinControl.Font.Color:= SysColor[COLOR_BTNTEXT];
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    AWinControl.Color:= SysColor[COLOR_BTNFACE];
+    AWinControl.Font.Color:= SysColor[COLOR_BTNTEXT];
+  end;
 end;
 
 { TWin32WSCustomListBoxDark }
@@ -704,13 +720,19 @@ var
   P: TCreateParams;
 begin
   P:= AParams;
-  P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
-  TCustomListBox(AWinControl).BorderStyle:= bsNone;
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
+    TCustomListBox(AWinControl).BorderStyle:= bsNone;
+  end;
+
   Result:= inherited CreateHandle(AWinControl, P);
-  EnableDarkStyle(Result);
-  SetWindowSubclass(Result, @ListBoxWindowProc2, ID_SUB_LISTBOX, 0);
-  TCustomListBox(AWinControl).Color:= SysColor[COLOR_WINDOW];
-  AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];
+
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    EnableDarkStyle(Result);
+    SetWindowSubclass(Result, @ListBoxWindowProc2, ID_SUB_LISTBOX, 0);
+    TCustomListBox(AWinControl).Color:= SysColor[COLOR_WINDOW];
+    AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];
+  end;
 end;
 
 { TWin32WSCustomListViewDark }
@@ -750,7 +772,9 @@ begin
   TCustomListView(AWinControl).BorderStyle:= bsNone;
   Result:= inherited CreateHandle(AWinControl, P);
   SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
-  EnableDarkStyle(Result);
+  if not (csDesigning in AWinControl.ComponentState) then begin
+     EnableDarkStyle(Result);
+  end;
 end;
 
 { TWin32WSCustomMemoDark }
@@ -761,15 +785,19 @@ var
   P: TCreateParams;
 begin
   P:= AParams;
-  TCustomEdit(AWinControl).BorderStyle:= bsNone;
-  P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
 
-  AWinControl.Color:= SysColor[COLOR_WINDOW];
-  AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    TCustomEdit(AWinControl).BorderStyle:= bsNone;
+    P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
+    AWinControl.Color:= SysColor[COLOR_WINDOW];
+    AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];
+  end;
 
   Result:= inherited CreateHandle(AWinControl, P);
 
-  EnableDarkStyle(Result);
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    EnableDarkStyle(Result);
+  end;
 end;
 
 { TWin32WSCustomComboBoxDark }
@@ -796,18 +824,23 @@ class function TWin32WSCustomComboBoxDark.CreateHandle(
 var
   Info: TComboboxInfo;
 begin
-  AWinControl.Color:= SysColor[COLOR_BTNFACE];
-  AWinControl.Font.Color:= SysColor[COLOR_BTNTEXT];
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    AWinControl.Color:= SysColor[COLOR_BTNFACE];
+    AWinControl.Font.Color:= SysColor[COLOR_BTNTEXT];
+  end;
 
   Result:= inherited CreateHandle(AWinControl, AParams);
 
-  Info.cbSize:= SizeOf(Info);
-  Win32Extra.GetComboBoxInfo(Result, @Info);
-  EnableDarkStyle(Info.hwndList);
+  if not (csDesigning in AWinControl.ComponentState) then begin
+    Info.cbSize:= SizeOf(Info);
+    Win32Extra.GetComboBoxInfo(Result, @Info);
 
-  AllowDarkModeForWindow(Result, True);
+    EnableDarkStyle(Info.hwndList);
 
-  SetWindowSubclass(Result, @ComboBoxWindowProc, ID_SUB_COMBOBOX, 0);
+    AllowDarkModeForWindow(Result, True);
+
+    SetWindowSubclass(Result, @ComboBoxWindowProc, ID_SUB_COMBOBOX, 0);
+  end;
 end;
 
 class function TWin32WSCustomComboBoxDark.GetDefaultColor(
@@ -858,9 +891,6 @@ begin
       X:= 1;
       LCanvas.Font.Color:= SysColor[COLOR_BTNTEXT];
       LCanvas.Pen.Color:= SysColor[{COLOR_BTNFACE}COLOR_GRAYTEXT];
-      if StatusBar.SimplePanel then
-         LCanvas.TextOut(X+3, (StatusBar.Height - LCanvas.TextHeight('Ag')) div 2, StatusBar.SimpleText)
-      else
       for Index:= 0 to StatusBar.Panels.Count - 1 do
       begin
         APanel:= StatusBar.Panels[Index];

@@ -890,7 +890,10 @@ begin
 
       X:= 1;
       LCanvas.Font.Color:= SysColor[COLOR_BTNTEXT];
-      LCanvas.Pen.Color:= SysColor[{COLOR_BTNFACE}COLOR_GRAYTEXT];
+      LCanvas.Pen.Color:= SysColor[COLOR_GRAYTEXT];
+      if StatusBar.SimplePanel then
+         LCanvas.TextOut(X+3, (StatusBar.Height - LCanvas.TextHeight('Ag')) div 2, StatusBar.SimpleText)
+      else
       for Index:= 0 to StatusBar.Panels.Count - 1 do
       begin
         APanel:= StatusBar.Panels[Index];

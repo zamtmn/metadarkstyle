@@ -937,6 +937,14 @@ procedure DrawReBar(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const 
 }
 function DrawThemeTextDark(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; pszText: LPCWSTR; iCharCount: Integer;
   dwTextFlags, dwTextFlags2: DWORD; const pRect: TRect): HRESULT; stdcall;
+function needMenuGrayText(iPartId, iStateId: Integer):Boolean;
+begin
+  case iPartId of
+      MENU_POPUPITEM:Result:=(iStateId = MDS_PRESSED)or(iStateId = MDS_DISABLED);
+    else
+      Result:=(iStateId in [MBI_DISABLED,MBI_DISABLEDHOT,MBI_DISABLEDPUSHED])and(iPartId<>MENU_BARITEM);
+  end;
+end;
 var
   OldColor: COLORREF;
   Index, Element: TThemedElement;
@@ -951,7 +959,7 @@ begin
       if Element = teToolTip then
         OldColor:= SysColor[COLOR_INFOTEXT]
       else if Element = teMenu then begin
-        if iStateId in [MBI_PUSHED,MBI_DISABLED,MBI_DISABLEDHOT,MBI_DISABLEDPUSHED] then
+        if needMenuGrayText(iPartId, iStateId) then
           OldColor:= SysColor[COLOR_GRAYTEXT]
         else
           OldColor:= SysColor[COLOR_BTNTEXT]
@@ -977,6 +985,15 @@ end;
 }
 function DrawThemeBackgroundDark(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
   pClipRect: PRECT): HRESULT; stdcall;
+function needMenuHiglightBkg(iPartId, iStateId: Integer):Boolean;
+begin
+  case iPartId of
+      MENU_POPUPITEM:Result:=iStateId = MDS_HOT;
+    else
+      Result:=(((iStateId = MDS_HOT)or(iStateId = MDS_PRESSED))and(iPartId<>MENU_BARBACKGROUND))or((iPartId=MENU_BARITEM)and(iStateId = MDS_CHECKED));
+  end;
+end;
+
 var
   LRect: TRect;
   AColor: TColor;
@@ -1054,7 +1071,7 @@ begin
           end;
         end;
       end else if Element = teMenu then begin
-        if iPartId in [MENU_BARBACKGROUND, MENU_POPUPITEM, MENU_POPUPGUTTER,
+        if iPartId in [MENU_BARBACKGROUND, MENU_BARITEM, MENU_POPUPITEM, MENU_POPUPGUTTER,
                        MENU_POPUPSUBMENU, MENU_POPUPSEPARATOR, MENU_POPUPCHECK,
                        MENU_POPUPCHECKBACKGROUND] then begin
           LCanvas:= TCanvas.Create;
@@ -1063,7 +1080,7 @@ begin
 
             if not (iPartId in [MENU_POPUPSUBMENU, MENU_POPUPCHECK, MENU_POPUPCHECKBACKGROUND]) then
             begin
-              if iStateId = MDS_HOT then
+              if needMenuHiglightBkg(iPartId,iStateId) then
                 LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT]
               else begin
                 LCanvas.Brush.Color:= RGBToColor(45, 45, 45);
@@ -1988,7 +2005,7 @@ begin
   SysColor[COLOR_HOTLIGHT]                := RGBToColor(66, 66, 66);
   SysColor[COLOR_GRADIENTACTIVECAPTION]   := GetSysColor(COLOR_GRADIENTACTIVECAPTION);
   SysColor[COLOR_GRADIENTINACTIVECAPTION] := GetSysColor(COLOR_GRADIENTINACTIVECAPTION);
-  SysColor[COLOR_MENUHILIGHT]             := RGBToColor(42, 130, 218);
+  SysColor[COLOR_MENUHILIGHT]             := RGBToColor(66, 66, 66);//RGBToColor(42, 130, 218);
   SysColor[COLOR_MENUBAR]                 := RGBToColor(42, 42, 42);
   SysColor[COLOR_FORM]                    := RGBToColor(53, 53, 53);
 end;

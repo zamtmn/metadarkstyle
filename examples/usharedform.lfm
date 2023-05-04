@@ -127,6 +127,7 @@ object Form1: TForm1
       Height = 133
       Top = 187
       Width = 202
+      ShowSeparators = False
       TabOrder = 1
       Items.Data = {
         F9FFFFFF020003000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
@@ -144,6 +145,7 @@ object Form1: TForm1
       Height = 144
       Top = 405
       Width = 379
+      BorderStyle = bsNone
       Columns = <      
         item
           Caption = '0'
@@ -166,9 +168,25 @@ object Form1: TForm1
     Left = 320
     Top = 59
     object MenuItem1: TMenuItem
-      Caption = 'MenuItem1'
+      Caption = 'Submenu'
       object MenuItem2: TMenuItem
-        Caption = 'MenuItem2'
+        Caption = 'Disabled'
+        Enabled = False
+      end
+      object MenuItem11: TMenuItem
+        Caption = 'Checked'
+        Checked = True
+      end
+      object MenuItem12: TMenuItem
+        Caption = 'Disabled checked'
+        Checked = True
+        Enabled = False
+      end
+      object MenuItem13: TMenuItem
+        Caption = 'Normal'
+      end
+      object Separator1: TMenuItem
+        Caption = '-'
       end
       object MenuItem3: TMenuItem
         Caption = 'MenuItem3'
@@ -187,7 +205,20 @@ object Form1: TForm1
       end
     end
     object MenuItem8: TMenuItem
-      Caption = 'MenuItem8'
+      Caption = 'Disabled'
+      Enabled = False
+    end
+    object MenuItem9: TMenuItem
+      Caption = 'Checked'
+      Checked = True
+    end
+    object MenuItem14: TMenuItem
+      Caption = 'Disabled checked'
+      Checked = True
+      Enabled = False
+    end
+    object MenuItem10: TMenuItem
+      Caption = 'MenuItem10'
     end
   end
 end

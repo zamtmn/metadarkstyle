@@ -11,6 +11,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   uDarkStyleParams,
+  uDarkStyleSchemes,
   uMetaDarkStyle,
   Forms, USharedForm
   { you can add units after this };
@@ -21,7 +22,7 @@ begin
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
   PreferredAppMode:=pamForceLight;
-  uMetaDarkStyle.ApplyMetaDarkStyle;
+  uMetaDarkStyle.ApplyMetaDarkStyle(DefaultTest);
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

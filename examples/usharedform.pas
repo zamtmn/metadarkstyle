@@ -6,7 +6,7 @@ interface
 
 uses
    Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-   Menus, ComCtrls;
+   Menus, ComCtrls, Spin, uWin32WidgetSetDark,uDarkStyleSchemes,uMetaDarkStyle;
 
 type
 
@@ -17,6 +17,7 @@ type
     CheckBox1: TCheckBox;
     ComboBox1: TComboBox;
     Edit1: TEdit;
+    FloatSpinEdit1: TFloatSpinEdit;
     GroupBox1: TGroupBox;
     Label1: TLabel;
     ListView1: TListView;
@@ -46,6 +47,8 @@ type
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
     TreeView1: TTreeView;
+    UpDown1: TUpDown;
+    procedure Button1Click(Sender: TObject);
   private
 
   public
@@ -58,6 +61,15 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TForm1 }
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  SetColorsScheme(DefaultTest);
+  MetaDarkFormChanged(self);
+  Invalidate;
+end;
 
 end.
 

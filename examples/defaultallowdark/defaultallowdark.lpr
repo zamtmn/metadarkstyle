@@ -12,6 +12,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   uDarkStyleParams,
   uMetaDarkStyle,
+  uDarkStyleSchemes,
   Forms, USharedForm
   { you can add units after this };
 
@@ -21,7 +22,7 @@ begin
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
   PreferredAppMode:=pamAllowDark;
-  uMetaDarkStyle.ApplyMetaDarkStyle;
+  uMetaDarkStyle.ApplyMetaDarkStyle(DefaultTest);
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

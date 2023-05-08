@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils,
   IDEOptionsIntf, IDEOptEditorIntf, LazIDEIntf,
-  uDarkStyleParams, uMetaDarkStyle,
+  uDarkStyleParams, uDarkStyleSchemes, uMetaDarkStyle,
   MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions;
 
 var
@@ -33,7 +33,7 @@ begin
   MetaDarkStyleDSGNOpt:=TMetaDarkStyleDSGNOptions.Create;
   MetaDarkStyleDSGNOpt.LoadSafe;
   PreferredAppMode:=AppModeOpt2PreferredAppMode(MetaDarkStyleDSGNOpt.AppMode);
-  ApplyMetaDarkStyle;
+  ApplyMetaDarkStyle(DefaultDark);
  {$ENDIF}
 end;
 

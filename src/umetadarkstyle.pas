@@ -11,19 +11,20 @@ uses
     {IF DEFINED(LCLQT5)}
       uDarkStyle,
     {ENDIF}
+    uDarkStyleParams,
     uWin32WidgetSetDark;
 {$ENDIF}
 
-procedure ApplyMetaDarkStyle;
+procedure ApplyMetaDarkStyle(const CS:TDSColors);
 procedure MetaDarkFormChanged(Form: TObject);
 
 implementation
 
-procedure ApplyMetaDarkStyle;
+procedure ApplyMetaDarkStyle(const CS:TDSColors);
 begin
   {$IFDEF WINDOWS}
   InitDarkMode;
-  Initialize;
+  Initialize(CS);
   ApplyDarkStyle;
   {$ENDIF}
 end;

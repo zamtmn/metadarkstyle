@@ -27,11 +27,12 @@ unit uWin32WidgetSetDark;
 interface
 
 uses
-  LCLVersion, uDarkStyleParams;
+  LCLVersion, uDarkStyleParams, uDarkStyleSchemes;
 
 procedure ApplyDarkStyle;
 procedure DarkFormChanged(Form: TObject);
-procedure Initialize;
+procedure Initialize(const CS:TDSColors);
+procedure SetColorsScheme(Scheme:TDSColors);
 
 implementation
 
@@ -173,7 +174,7 @@ var
   ThemeClass: TThemeClassMap = nil;
   OldUpDownWndProc: Windows.WNDPROC;
   CustomFormWndProc: Windows.WNDPROC;
-  SysColor: array[0..COLOR_ENDCOLORS] of TColor;
+  SysColor: TSysColors;
   SysColorBrush: array[0..COLOR_ENDCOLORS] of HBRUSH;
   DefSubclassProc: function(hWnd: HWND; uMsg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall;
   SetWindowSubclass: function(hWnd: HWND; pfnSubclass: SUBCLASSPROC; uIdSubclass: UINT_PTR; dwRefData: DWORD_PTR): BOOL; stdcall;
@@ -311,7 +312,7 @@ begin
   MenuInfo:= Default(TMenuInfo);
   MenuInfo.cbSize:= SizeOf(MenuInfo);
   MenuInfo.fMask:= MIM_BACKGROUND or MIM_APPLYTOSUBMENUS;
-  MenuInfo.hbrBack:= CreateSolidBrush(RGBToColor(45, 45, 45));
+  MenuInfo.hbrBack:= CreateSolidBrush(SysColor[COLOR_MENU]{RGBToColor(45, 45, 45)});
   SetMenuInfo(Menu, @MenuInfo);
 end;
 
@@ -463,20 +464,20 @@ begin
 
         if (IntersectRect(rcDst, L, PS.rcPaint)) then
         begin
-          LCanvas.Pen.Color:= RGBToColor(38, 38, 38);
+          LCanvas.Pen.Color:= SysColor[COLOR_BTNSHADOW];//RGBToColor(38, 38, 38);
           LCanvas.RoundRect(L, 4, 4);
           InflateRect(L, -1, -1);
-          LCanvas.Pen.Color:= RGBToColor(92, 92, 92);
+          LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];//RGBToColor(92, 92, 92);
           LCanvas.RoundRect(L, 4, 4);
           DrawUpDownArrow(Window, LCanvas, L, LButton);
         end;
 
         if (IntersectRect(rcDst, R, PS.rcPaint)) then
         begin
-          LCanvas.Pen.Color:= RGBToColor(38, 38, 38);
+          LCanvas.Pen.Color:= SysColor[COLOR_BTNSHADOW];//RGBToColor(38, 38, 38);
           LCanvas.RoundRect(R, 4, 4);
           InflateRect(R, -1, -1);
-          LCanvas.Pen.Color:= RGBToColor(92, 92, 92);
+          LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];//RGBToColor(92, 92, 92);
           LCanvas.RoundRect(R, 4, 4);
           DrawUpDownArrow(Window, LCanvas, R, RButton);
         end;
@@ -1083,7 +1084,7 @@ begin
               if needMenuHiglightBkg(iPartId,iStateId) then
                 LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT]
               else begin
-                LCanvas.Brush.Color:= RGBToColor(45, 45, 45);
+                LCanvas.Brush.Color:= SysColor[COLOR_MENUBAR];//RGBToColor(45, 45, 45);
               end;
               LCanvas.FillRect(pRect);
             end;
@@ -1095,14 +1096,14 @@ begin
               AStyle.Alignment:= taCenter;
               LCanvas.Brush.Style:= bsClear;
               LCanvas.Font.Name:= 'Segoe MDL2 Assets';
-              LCanvas.Font.Color:= RGBToColor(212, 212, 212);
+              LCanvas.Font.Color:= SysColor[COLOR_MENUTEXT];//RGBToColor(212, 212, 212);
               LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_CHECKED, AStyle);
             end;
 
             if iPartId = MENU_POPUPSEPARATOR then
             begin
              LRect:= pRect;
-             LCanvas.Pen.Color:= RGBToColor(112, 112, 112);
+             LCanvas.Pen.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(112, 112, 112);
              LRect.Top:= LRect.Top + (LRect.Height div 2);
              LRect.Bottom:= LRect.Top;
 
@@ -1113,8 +1114,8 @@ begin
             begin
               LRect:= pRect;
               InflateRect(LRect, -1, -1);
-              LCanvas.Pen.Color:= RGBToColor(45, 45, 45);
-              LCanvas.Brush.Color:= RGBToColor(81, 81, 81);
+              LCanvas.Pen.Color:= SysColor[COLOR_MENU];//RGBToColor(45, 45, 45);
+              LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT];//RGBToColor(81, 81, 81);
               LCanvas.RoundRect(LRect, 6, 6);
             end;
 
@@ -1122,7 +1123,7 @@ begin
             begin
               LCanvas.Brush.Style:= bsClear;
               LCanvas.Font.Name:= 'Segoe MDL2 Assets';
-              LCanvas.Font.Color:= RGBToColor(111, 111, 111);
+              LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(111, 111, 111);
               LCanvas.TextOut(pRect.Left, pRect.Top, MDL_MENU_SUBMENU);
             end;
           finally
@@ -1559,7 +1560,7 @@ begin
     if iStateId in [CBS_UNCHECKEDHOT, CBS_MIXEDHOT, CBS_CHECKEDHOT] then
       LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]
     else begin
-      LCanvas.Font.Color:= RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
     end;
     LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_OUTLINE, AStyle);
 
@@ -1567,13 +1568,13 @@ begin
     if iStateId in [CBS_MIXEDNORMAL, CBS_MIXEDHOT,
                     CBS_MIXEDPRESSED, CBS_MIXEDDISABLED] then
     begin
-      LCanvas.Font.Color:= RGBToColor(120, 120, 120);
+      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(120, 120, 120);
       LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_GRAYED, AStyle);
     end
     else if iStateId in [CBS_CHECKEDNORMAL, CBS_CHECKEDHOT,
                          CBS_CHECKEDPRESSED, CBS_CHECKEDDISABLED] then
     begin
-      LCanvas.Font.Color:= RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
       LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_CHECKED, AStyle);
     end;
   finally
@@ -1654,17 +1655,17 @@ begin
     if iStateId in [RBS_CHECKEDNORMAL, RBS_CHECKEDHOT,
                     RBS_CHECKEDPRESSED, RBS_CHECKEDDISABLED] then
     begin
-      LCanvas.Font.Color:= RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
       LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_CHECKED, AStyle );
     end;
 
     // Set outline circle color
     if iStateId in [RBS_UNCHECKEDPRESSED, RBS_CHECKEDPRESSED] then
-      LCanvas.Font.Color:= RGBToColor(83, 160, 237)
+      LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]//RGBToColor(83, 160, 237)
     else if iStateId in [RBS_UNCHECKEDHOT, RBS_CHECKEDHOT] then
       LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]
     else begin
-      LCanvas.Font.Color:= RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
     end;
     // Draw outline circle
     LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_OUTLINE, AStyle);
@@ -1975,39 +1976,18 @@ begin
   Result:= DeleteObjectOld(ho);
 end;
 
-procedure InitializeColors;
+procedure InitializeColors(const CS:TDSColors);
 begin
-  SysColor[COLOR_SCROLLBAR]               := RGBToColor(53, 53, 53);
-  SysColor[COLOR_BACKGROUND]              := RGBToColor(53, 53, 53);
-  SysColor[COLOR_ACTIVECAPTION]           := RGBToColor(42, 130, 218);
-  SysColor[COLOR_INACTIVECAPTION]         := RGBToColor(53, 53, 53);
-  SysColor[COLOR_MENU]                    := RGBToColor(42, 42, 42);
-  SysColor[COLOR_WINDOW]                  := RGBToColor(42, 42, 42);
-  SysColor[COLOR_WINDOWFRAME]             := RGBToColor(20, 20, 20);
-  SysColor[COLOR_MENUTEXT]                := RGBToColor(245, 245, 245);
-  SysColor[COLOR_WINDOWTEXT]              := RGBToColor(245, 245, 245);
-  SysColor[COLOR_CAPTIONTEXT]             := RGBToColor(245, 245, 245);
-  SysColor[COLOR_ACTIVEBORDER]            := RGBToColor(53, 53, 53);
-  SysColor[COLOR_INACTIVEBORDER]          := RGBToColor(53, 53, 53);
-  SysColor[COLOR_APPWORKSPACE]            := RGBToColor(53, 53, 53);
-  SysColor[COLOR_HIGHLIGHT]               := RGBToColor(42, 130, 218);
-  SysColor[COLOR_HIGHLIGHTTEXT]           := RGBToColor(245, 245, 245);
-  SysColor[COLOR_BTNFACE]                 := RGBToColor(53, 53, 53);
-  SysColor[COLOR_BTNSHADOW]               := RGBToColor(35, 35, 35);
-  SysColor[COLOR_GRAYTEXT]                := RGBToColor(160, 160, 160);
-  SysColor[COLOR_BTNTEXT]                 := RGBToColor(245, 245, 245);
-  SysColor[COLOR_INACTIVECAPTIONTEXT]     := RGBToColor(245, 245, 245);
-  SysColor[COLOR_BTNHIGHLIGHT]            := RGBToColor(66, 66, 66);
-  SysColor[COLOR_3DDKSHADOW]              := RGBToColor(20, 20, 20);
-  SysColor[COLOR_3DLIGHT]                 := RGBToColor(40, 40, 40);
-  SysColor[COLOR_INFOTEXT]                := RGBToColor(53, 53, 53);
-  SysColor[COLOR_INFOBK]                  := RGBToColor(245, 245, 245);
-  SysColor[COLOR_HOTLIGHT]                := RGBToColor(66, 66, 66);
-  SysColor[COLOR_GRADIENTACTIVECAPTION]   := GetSysColor(COLOR_GRADIENTACTIVECAPTION);
-  SysColor[COLOR_GRADIENTINACTIVECAPTION] := GetSysColor(COLOR_GRADIENTINACTIVECAPTION);
-  SysColor[COLOR_MENUHILIGHT]             := RGBToColor(66, 66, 66);//RGBToColor(42, 130, 218);
-  SysColor[COLOR_MENUBAR]                 := RGBToColor(42, 42, 42);
-  SysColor[COLOR_FORM]                    := RGBToColor(53, 53, 53);
+  SysColor:=CS.SysColor;
+end;
+
+procedure SetColorsScheme(Scheme:TDSColors);
+var
+  Index: Integer;
+begin
+  for Index:= 0 to High(SysColorBrush) do
+    SysColorBrush[Index] := 0;
+  SysColor:=Scheme.SysColor;
 end;
 
 function WinRegister(ClassName: PWideChar): Boolean;
@@ -2029,7 +2009,7 @@ begin
   Result := Windows.RegisterClassW(@WindowClassW) <> 0;
 end;
 
-procedure Initialize;
+procedure Initialize(const CS:TDSColors);
 var
   hModule, hUxTheme: THandle;
   pLibrary, pFunction: PPointer;
@@ -2038,7 +2018,7 @@ begin
   if not IsDarkModeEnabled then
     Exit;
 
-  InitializeColors;
+  InitializeColors(CS);
 
   WinRegister(ClassNameW);
   WinRegister(ClassNameTC);

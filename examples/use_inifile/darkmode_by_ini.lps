@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="darkmode_by_ini.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="21"/>
+        <CursorPos X="43" Y="43"/>
+        <UsageCount Value="83"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="umainform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uMainForm"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="108"/>
+        <CursorPos X="13" Y="122"/>
+        <UsageCount Value="83"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="usubform.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SubForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="20"/>
+        <CursorPos X="40" Y="44"/>
+        <UsageCount Value="76"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\files_mdtadarkstyle\udarkstyleparams.pas"/>
+        <UnitName Value="uDarkStyleParams"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="7"/>
+        <CursorPos X="18" Y="30"/>
+        <UsageCount Value="4"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitsDarkmode_fix17\umetadarkstyle.pas"/>
+        <UnitName Value="uMetaDarkStyle"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="27"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitsDarkmode_fix17\uwin32widgetsetdark.pas"/>
+        <UnitName Value="uWin32WidgetSetDark"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2087"/>
+        <CursorPos X="56" Y="2114"/>
+        <UsageCount Value="27"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitsDarkmode_fix17\udarkstyleparams.pas"/>
+        <UnitName Value="uDarkStyleParams"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="51" Y="28"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unitsDarkmode_fix17\udarkstyleschemes.pas"/>
+        <UnitName Value="uDarkStyleSchemes"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="15" Y="21"/>
+        <UsageCount Value="19"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="12">
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="144" Column="17" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="144" Column="14" TopLine="125"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="137" Column="4" TopLine="117"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="136" Column="17" TopLine="121"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="140" Column="21" TopLine="117"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="143" Column="21" TopLine="117"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="151" Column="60" TopLine="121"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="142" Column="17" TopLine="125"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="112" Column="15" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="139" Column="22" TopLine="123"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="133" Column="22" TopLine="123"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="134" Column="22" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="umainform.pas"/>
+        <Caret Line="133" Column="22" TopLine="123"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

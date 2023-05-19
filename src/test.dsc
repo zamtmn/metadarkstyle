@@ -1,0 +1,33 @@
+begin
+  Colors[COLOR_SCROLLBAR]:=               RGBToColor(53, 53, 153);
+  Colors[COLOR_BACKGROUND]:=              RGBToColor(53, 53, 153);
+  Colors[COLOR_ACTIVECAPTION]:=           RGBToColor(42, 130, 18);
+  Colors[COLOR_INACTIVECAPTION]:=         RGBToColor(53, 53, 153);
+  Colors[COLOR_MENU]:=                    RGBToColor(42, 42, 142);
+  Colors[COLOR_WINDOW]:=                  RGBToColor(42, 42, 142);
+  Colors[COLOR_WINDOWFRAME]:=             RGBToColor(20, 20, 120);
+  Colors[COLOR_MENUTEXT]:=                RGBToColor(245, 245, 45);
+  Colors[COLOR_WINDOWTEXT]:=              RGBToColor(245, 245, 45);
+  Colors[COLOR_CAPTIONTEXT]:=             RGBToColor(245, 245, 45);
+  Colors[COLOR_ACTIVEBORDER] :=           RGBToColor(53, 53, 153);
+  Colors[COLOR_INACTIVEBORDER]:=          RGBToColor(53, 53, 153);
+  Colors[COLOR_APPWORKSPACE]:=            RGBToColor(53, 53, 153);
+  Colors[COLOR_HIGHLIGHT]:=               RGBToColor(42, 130, 18);
+  Colors[COLOR_HIGHLIGHTTEXT]:=           RGBToColor(245, 245, 45);
+  Colors[COLOR_BTNFACE]:=                 RGBToColor(53, 53, 153);
+  Colors[COLOR_BTNSHADOW]:=               RGBToColor(35, 35, 135);
+  Colors[COLOR_GRAYTEXT]:=                RGBToColor(160, 160, 60);
+  Colors[COLOR_BTNTEXT]:=                 RGBToColor(245, 245, 45);
+  Colors[COLOR_INACTIVECAPTIONTEXT]:=     RGBToColor(245, 245, 45);
+  Colors[COLOR_BTNHIGHLIGHT]:=            RGBToColor(66, 66, 166);
+  Colors[COLOR_3DDKSHADOW]:=              RGBToColor(20, 20, 120);
+  Colors[COLOR_3DLIGHT]:=                 RGBToColor(40, 40, 140);
+  Colors[COLOR_INFOTEXT]:=                RGBToColor(53, 53, 153);
+  Colors[COLOR_INFOBK]:=                  RGBToColor(245, 245, 45);
+  Colors[COLOR_HOTLIGHT]:=                RGBToColor(66, 66, 166);
+  Colors[COLOR_GRADIENTACTIVECAPTION]:=   GetSysColor(COLOR_GRADIENTACTIVECAPTION);
+  Colors[COLOR_GRADIENTINACTIVECAPTION]:= GetSysColor(COLOR_GRADIENTINACTIVECAPTION);
+  Colors[COLOR_MENUHILIGHT]:=             RGBToColor(66, 66, 166);
+  Colors[COLOR_MENUBAR]:=                 RGBToColor(42, 42, 142);
+  Colors[COLOR_FORM]:=                    RGBToColor(53, 53, 153);
+end.

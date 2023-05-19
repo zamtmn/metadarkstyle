@@ -12,6 +12,7 @@ uses
       uDarkStyle,
     {ENDIF}
     uDarkStyleParams,
+    uDarkStyleSchemesLoader,
     uWin32WidgetSetDark;
 {$ENDIF}
 

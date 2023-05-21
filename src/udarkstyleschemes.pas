@@ -23,9 +23,15 @@ type
     Name:TSchemeName;
     Data:TDSColors;
   end;
+  TSchemeKey=String;
+  TSchemes=class(specialize TMap<TSchemeKey,TSchemeData,specialize TLess<TSchemeKey>>)
+    function GetMutableValue(key:TSchemeKey):PTSchemeData;
+  end;
+
 
 var
   DefaultDark,DefaultWhite:TDSColors;
+  Schemes:TSchemes=nil;
 
 function GetScheme(AName:TSchemeName):TDSColors;
 function GetSchemeMutable(AName:TSchemeName):PTSchemeData;
@@ -36,15 +42,6 @@ procedure LoadPath(APath,AMask:string);
 implementation
 uses
   uDarkStyleSchemesLoader;
-
-type
-  TSchemeKey=String;
-  TSchemes=class(specialize TMap<TSchemeKey,TSchemeData,specialize TLess<TSchemeKey>>)
-    function GetMutableValue(key:TSchemeKey):PTSchemeData;
-  end;
-
-var
- Schemes:TSchemes=nil;
 
 function TSchemes.GetMutableValue(key:TSchemeKey):PTSchemeData;
 var

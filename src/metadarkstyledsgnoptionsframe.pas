@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, StdCtrls,
   IDEOptionsIntf,IDEOptEditorIntf,
-  MetaDarkStyleDSGNOptions;
+  MetaDarkStyleDSGNOptions,uDarkStyleSchemes;
 
 resourceString
   RSDarkStyleDSGNOptionsFrame='Dark style';
@@ -42,13 +42,28 @@ begin
   result:=RSDarkStyleDSGNOptionsFrame;
 end;
 
+procedure SchemeToComboSet(ASch:string;ACombo:TComboBox;curr:integer);
+begin
+  if ASch=MetaDarkStyleDSGNOpt.ColorScheme then
+    ACombo.ItemIndex:=curr;
+end;
+
 procedure TDarkStyleDSGNOptionsFrame.Setup({%H-}ADialog: TAbstractOptionsEditorDialog);
 var
   i:TAppModeOpt;
+  itr:TSchemes.TIterator;
 begin
   PAMComboBox.Items.Clear;
   for i:=low(AppModeOptStr) to high(AppModeOptStr) do
     PAMComboBox.Items.Add(AppModeOptLocalizedStr[i]);
+  CSComboBox.Items.Clear;
+  CSComboBox.Items.Add('Dark');
+  CSComboBox.Items.Add('White');
+  itr:=Schemes.Min;
+  if itr<>nil then repeat
+    CSComboBox.Items.Add(itr.Data.Value.Name);
+  until not itr.Next;
+  itr.free;
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.ReadSettings({%H-}AOptions: TAbstractIDEOptions);
@@ -59,13 +74,26 @@ end;
 procedure TDarkStyleDSGNOptionsFrame.WriteSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
   MetaDarkStyleDSGNOpt.AppMode:=TAppModeOpt(PAMComboBox.ItemIndex);
+  MetaDarkStyleDSGNOpt.ColorScheme:=CSComboBox.Items[CSComboBox.ItemIndex];
   if MetaDarkStyleDSGNOpt.Modified then
     MetaDarkStyleDSGNOpt.SaveSafe;
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.RestoreSettings({%H-}AOptions: TAbstractIDEOptions);
+var
+  itr:TSchemes.TIterator;
+  i:integer;
 begin
   PAMComboBox.ItemIndex:=ord(MetaDarkStyleDSGNOpt.AppMode);
+  SchemeToComboSet('Dark',CSComboBox,0);
+  SchemeToComboSet('White',CSComboBox,1);
+  itr:=Schemes.Min;
+  i:=2;
+  if itr<>nil then repeat
+    SchemeToComboSet(itr.Data.Value.Name,CSComboBox,i);
+    inc(i);
+  until not itr.Next;
+  itr.free;
 end;
 
 class function TDarkStyleDSGNOptionsFrame.SupportedOptionsClass: TAbstractIDEOptionsClass;

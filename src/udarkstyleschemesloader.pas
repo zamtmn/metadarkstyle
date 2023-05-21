@@ -422,6 +422,7 @@ var
 begin
   ms:=TOnMemoryStream.Create(@module[1],Length(module)*sizeof(module[1]));
   result:=ParseColors(modulename,ms,DSC);
+  ms.Destroy;
 end;
 
 function ParseColorsFile(AFile:string;out DSC:TDSColors):Boolean;overload;
@@ -429,7 +430,8 @@ var
   bfs:TBufferedFileStream;
 begin
   bfs:=TBufferedFileStream.Create(AFile,fmOpenRead or fmShareDenyWrite);
-  result:=ParseColors(ExtractFileName(AFile),bfs,DSC);
+  result:=ParseColors(AFile,bfs,DSC);
+  bfs.Destroy;
 end;
 
 initialization

@@ -18,8 +18,10 @@ type
   { TDarkStyleDSGNOptionsFrame }
 
   TDarkStyleDSGNOptionsFrame = class(TAbstractIDEOptionsEditor)
-    ComboBox1: TComboBox;
+    PAMComboBox: TComboBox;
+    CSComboBox: TComboBox;
     Label1: TLabel;
+    Label2: TLabel;
   private
 
   public
@@ -44,9 +46,9 @@ procedure TDarkStyleDSGNOptionsFrame.Setup({%H-}ADialog: TAbstractOptionsEditorD
 var
   i:TAppModeOpt;
 begin
-  ComboBox1.Items.Clear;
+  PAMComboBox.Items.Clear;
   for i:=low(AppModeOptStr) to high(AppModeOptStr) do
-    ComboBox1.Items.Add(AppModeOptLocalizedStr[i]);
+    PAMComboBox.Items.Add(AppModeOptLocalizedStr[i]);
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.ReadSettings({%H-}AOptions: TAbstractIDEOptions);
@@ -56,14 +58,14 @@ end;
 
 procedure TDarkStyleDSGNOptionsFrame.WriteSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
-  MetaDarkStyleDSGNOpt.AppMode:=TAppModeOpt(ComboBox1.ItemIndex);
+  MetaDarkStyleDSGNOpt.AppMode:=TAppModeOpt(PAMComboBox.ItemIndex);
   if MetaDarkStyleDSGNOpt.Modified then
     MetaDarkStyleDSGNOpt.SaveSafe;
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.RestoreSettings({%H-}AOptions: TAbstractIDEOptions);
 begin
-  ComboBox1.ItemIndex:=ord(MetaDarkStyleDSGNOpt.AppMode);
+  PAMComboBox.ItemIndex:=ord(MetaDarkStyleDSGNOpt.AppMode);
 end;
 
 class function TDarkStyleDSGNOptionsFrame.SupportedOptionsClass: TAbstractIDEOptionsClass;

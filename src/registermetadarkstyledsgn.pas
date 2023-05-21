@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils,
-  IDEOptionsIntf, IDEOptEditorIntf, LazIDEIntf,
+  IDEOptionsIntf, IDEOptEditorIntf, LazIDEIntf, lazconf,
   uDarkStyleParams, uDarkStyleSchemes, uMetaDarkStyle,
   MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions;
 
@@ -30,10 +30,13 @@ end;
 procedure SetDarkStyle;
 begin
  {$IF DEFINED(MSWINDOWS)}
+  LoadLResources;
+  LoadPath(GetPrimaryConfigPath+'/userschemes','*.'+DSColorsTypeName);
+  LoadPath(GetSecondaryConfigPath+'/userschemes','*.'+DSColorsTypeName);
   MetaDarkStyleDSGNOpt:=TMetaDarkStyleDSGNOptions.Create;
   MetaDarkStyleDSGNOpt.LoadSafe;
   PreferredAppMode:=AppModeOpt2PreferredAppMode(MetaDarkStyleDSGNOpt.AppMode);
-  ApplyMetaDarkStyle(DefaultDark);
+  ApplyMetaDarkStyle(GetScheme(MetaDarkStyleDSGNOpt.ColorScheme));
  {$ENDIF}
 end;
 

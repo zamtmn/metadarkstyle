@@ -32,11 +32,14 @@ type
   private
     const
       DefaultAppMode:TAppModeOpt=amOptAllowDark;
+      DefaultColorScheme:String='Dark';
     var
-    FAppMode:TAppModeOpt;
-    FChangeStamp:Integer;
-    FLastSavedChangeStamp:Integer;
+      FAppMode:TAppModeOpt;
+      FColorScheme:String;
+      FChangeStamp:Integer;
+      FLastSavedChangeStamp:Integer;
     procedure SetAppMode(AValue:TAppModeOpt);
+    procedure SetColorScheme(AValue:String);
     function GetModified:Boolean;
     procedure SetModified(AValue: Boolean);
     function Str2AppModeOpt(str:string):TAppModeOpt;
@@ -52,6 +55,7 @@ type
     property Modified:Boolean read GetModified write SetModified;
 
     property AppMode:TAppModeOpt read FAppMode write SetAppMode;
+    property ColorScheme:String  read FColorScheme write SetColorScheme;
   end;
 
 const
@@ -81,6 +85,13 @@ procedure TMetaDarkStyleDSGNOptions.SetAppMode(AValue:TAppModeOpt);
 begin
   if FAppMode=AValue then Exit;
   FAppMode:=AValue;
+  IncreaseChangeStamp;
+end;
+
+procedure TMetaDarkStyleDSGNOptions.SetColorScheme(AValue:String);
+begin
+  if FColorScheme=AValue then Exit;
+  FColorScheme:=AValue;
   IncreaseChangeStamp;
 end;
 
@@ -120,6 +131,7 @@ begin
   Cfg:=GetIDEConfigStorage(AFilename,False);
   try
     Cfg.SetDeleteValue('AppMode/Value',AppModeOptStr[AppMode],AppModeOptStr[DefaultAppMode]);
+    Cfg.SetDeleteValue('ColorScheme/Value',ColorScheme,DefaultColorScheme);
   finally
     Cfg.Free;
   end;
@@ -142,6 +154,7 @@ begin
   Cfg := GetIDEConfigStorage(AFilename,True);
   try
     AppMode:= Str2AppModeOpt(Cfg.GetValue('AppMode/Value',AppModeOptStr[DefaultAppMode]));
+    ColorScheme:= Cfg.GetValue('ColorScheme/Value',DefaultColorScheme);
   finally
     Cfg.Free;
   end;

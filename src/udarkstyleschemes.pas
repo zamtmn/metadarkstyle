@@ -27,8 +27,11 @@ type
 var
   DefaultDark,DefaultWhite:TDSColors;
 
+function GetScheme(AName:TSchemeName):TDSColors;
 function GetSchemeMutable(AName:TSchemeName):PTSchemeData;
 procedure AddScheme(AName:TSchemeName;AData:TDSColors);
+procedure LoadLResources;
+procedure LoadPath(APath,AMask:string);
 
 implementation
 uses
@@ -66,6 +69,25 @@ begin
   if Schemes=nil then
     exit(nil);
   result:=Schemes.GetMutableValue(SchameName2SchameID(AName));
+end;
+
+function GetScheme(AName:TSchemeName):TDSColors;
+var
+  ps:PTSchemeData;
+  UCName:string;
+begin
+  UCName:=UpperCase(AName);
+  if UCName='DARK' then
+    result:=DefaultDark
+  else if UCName='WHITE' then
+    result:=DefaultWhite
+  else begin
+    ps:=GetSchemeMutable(AName);
+    if ps=nil then
+      result:=DefaultDark
+    else
+      result:=ps^.Data;
+  end;
 end;
 
 function CreateTSchemeData(AName:TSchemeName;AData:TDSColors):TSchemeData;
@@ -112,8 +134,8 @@ begin
     repeat
       if (sr.Name <> '.') and (sr.Name <> '..') then begin
         if MatchesMask(sr.Name,AMask) then
-          if ParseColorsFile(sr.Name,DSC) then
-            AddScheme(ExtractFileName(sr.Name),DSC);
+          if ParseColorsFile(APath+'/'+sr.Name,DSC) then
+            AddScheme(ChangeFileExt(sr.Name,''),DSC);
       end;
     until FindNext(sr) <> 0;
     FindClose(sr);

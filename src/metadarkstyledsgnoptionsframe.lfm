@@ -13,7 +13,7 @@ object DarkStyleDSGNOptionsFrame: TDarkStyleDSGNOptionsFrame
   DesignTop = 10
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = ComboBox1
+    AnchorSideTop.Control = PAMComboBox
     AnchorSideTop.Side = asrCenter
     Left = 6
     Height = 25
@@ -23,7 +23,7 @@ object DarkStyleDSGNOptionsFrame: TDarkStyleDSGNOptionsFrame
     BorderSpacing.Right = 6
     Caption = 'PreferredAppMode (Need restart)'
   end
-  object ComboBox1: TComboBox
+  object PAMComboBox: TComboBox
     AnchorSideLeft.Control = Label1
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
@@ -46,5 +46,35 @@ object DarkStyleDSGNOptionsFrame: TDarkStyleDSGNOptionsFrame
     ParentFont = False
     Style = csDropDownList
     TabOrder = 0
+  end
+  object CSComboBox: TComboBox
+    AnchorSideLeft.Control = Label2
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = PAMComboBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 120
+    Height = 33
+    Top = 45
+    Width = 354
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 6
+    ItemHeight = 25
+    Style = csDropDownList
+    TabOrder = 1
+  end
+  object Label2: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = CSComboBox
+    AnchorSideTop.Side = asrCenter
+    Left = 6
+    Height = 25
+    Top = 49
+    Width = 108
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    Caption = 'Color scheme'
   end
 end

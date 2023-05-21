@@ -1,4 +1,4 @@
-LazarusResources.Add('test','DSC',[
+LazarusResources.Add('test','DARKSTYLECOLORS',[
   'begin'#13#10'  Colors[COLOR_SCROLLBAR]:=               RGBToColor(53, 53, 15'
   +'3);'#13#10'  Colors[COLOR_BACKGROUND]:=              RGBToColor(53, 53, 153'
   +');'#13#10'  Colors[COLOR_ACTIVECAPTION]:=           RGBToColor(42, 130, 18)'

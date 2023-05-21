@@ -7,13 +7,118 @@ unit uDarkStyleSchemes;
 interface
 
 uses
-  LCLType,LCLIntf,Graphics,
-  uDarkStyleParams;
+  SysUtils,
+  LCLType,LCLIntf,Graphics,Masks,
+  LResources,
+  uDarkStyleParams,
+  gmap,gutil;
+
+const
+  DSColorsTypeName='DARKSTYLECOLORS';
+
+type
+  TSchemeName=String;
+  PTSchemeData=^TSchemeData;
+  TSchemeData=record
+    Name:TSchemeName;
+    Data:TDSColors;
+  end;
 
 var
   DefaultDark,DefaultWhite:TDSColors;
 
+function GetSchemeMutable(AName:TSchemeName):PTSchemeData;
+procedure AddScheme(AName:TSchemeName;AData:TDSColors);
+
 implementation
+uses
+  uDarkStyleSchemesLoader;
+
+type
+  TSchemeKey=String;
+  TSchemes=class(specialize TMap<TSchemeKey,TSchemeData,specialize TLess<TSchemeKey>>)
+    function GetMutableValue(key:TSchemeKey):PTSchemeData;
+  end;
+
+var
+ Schemes:TSchemes=nil;
+
+function TSchemes.GetMutableValue(key:TSchemeKey):PTSchemeData;
+var
+ Pair:TPair;
+ Node:TMSet.PNode;
+begin
+ Pair.Key:=key;
+ Node:=FSet.NFind(Pair);
+ if Node=nil then
+   result:=nil
+ else
+   result:=@Node^.Data.Value;
+end;
+
+function SchameName2SchameID(AName:TSchemeName):TSchemeKey;inline;
+begin
+  result:=UpperCase(AName);
+end;
+
+function GetSchemeMutable(AName:TSchemeName):PTSchemeData;
+begin
+  if Schemes=nil then
+    exit(nil);
+  result:=Schemes.GetMutableValue(SchameName2SchameID(AName));
+end;
+
+function CreateTSchemeData(AName:TSchemeName;AData:TDSColors):TSchemeData;
+begin
+  result.Data:=AData;
+  result.Name:=AName;
+end;
+
+procedure AddScheme(AName:TSchemeName;AData:TDSColors);
+var
+  id:TSchemeKey;
+begin
+  id:=SchameName2SchameID(AName);
+  if Schemes=nil then begin
+    Schemes:=TSchemes.Create;
+    Schemes.Insert(id,CreateTSchemeData(AName,AData));
+  end else begin
+    if Schemes.GetMutableValue(id)=nil then
+      Schemes.Insert(id,CreateTSchemeData(AName,AData));
+  end;
+end;
+
+procedure LoadLResources;
+var
+  r:TLResource;
+  DSC:TDSColors;
+  i:integer;
+begin
+  for i:=0 to LazarusResources.Count-1 do begin
+    r:=LazarusResources.Items[i];
+    if UpperCase(r.ValueType)=DSColorsTypeName then
+      if GetSchemeMutable(r.Value)=nil then
+        if ParseColors(r.Name,r.Value,DSC) then
+          AddScheme(r.Name,DSC);
+  end;
+end;
+
+procedure LoadPath(APath,AMask:string);
+var
+  DSC:TDSColors;
+  sr: TSearchRec;
+begin
+  if FindFirst(APath+'/*',faAnyFile,sr) = 0 then begin
+    repeat
+      if (sr.Name <> '.') and (sr.Name <> '..') then begin
+        if MatchesMask(sr.Name,AMask) then
+          if ParseColorsFile(sr.Name,DSC) then
+            AddScheme(ExtractFileName(sr.Name),DSC);
+      end;
+    until FindNext(sr) <> 0;
+    FindClose(sr);
+  end;
+end;
 
 procedure InitializeDefaultColors;
 begin

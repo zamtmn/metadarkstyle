@@ -7,11 +7,15 @@ unit uDarkStyleSchemesLoader;
 interface
 
 uses
-  SysUtils,Classes,
+  SysUtils,Classes,bufstream,
   LCLProc,LCLType,LCLIntf,Graphics,
   LResources,
   PScanner, PParser, PasTree,
   uDarkStyleParams,uDarkStyleSchemes;
+
+function ParseColors(modulename,module:string;out DSC:TDSColors):Boolean;overload;
+function ParseColors(modulename:string;module:TStream;out DSC:TDSColors):Boolean;overload;
+function ParseColorsFile(AFile:string;out DSC:TDSColors):Boolean;overload;
 
 implementation
 
@@ -391,14 +395,12 @@ begin
    PrepareElement(pie,Result);
 end;
 
-function ParseColors(modulename,module:string;out DSC:TDSColors):Boolean;
+function ParseColors(modulename:string;module:TStream;out DSC:TDSColors):Boolean;overload;
 var
-  ms:TOnMemoryStream;
   m:TPasModule;
 begin
   result:=true;
-  ms:=TOnMemoryStream.Create(@module[1],Length(module)*sizeof(module[1]));
-  m:=ScanModule(modulename,ms);
+  m:=ScanModule(modulename,module);
   try
     try
       dsc:=PrepareModule(m);
@@ -411,23 +413,25 @@ begin
     end;
   finally
     m.Free;
-    ms.Free;
   end;
 end;
 
-procedure TestLoad;
+function ParseColors(modulename,module:string;out DSC:TDSColors):Boolean;overload;
 var
-  r: TLResource;
-  DSC:TDSColors;
+  ms:TOnMemoryStream;
 begin
-  r:=LazarusResources.Find('test');
-  if r<>nil then begin
-    ParseColors(r.Name,r.Value,DSC);
-    DefaultDark:=DSC;
-  end;
+  ms:=TOnMemoryStream.Create(@module[1],Length(module)*sizeof(module[1]));
+  result:=ParseColors(modulename,ms,DSC);
+end;
+
+function ParseColorsFile(AFile:string;out DSC:TDSColors):Boolean;overload;
+var
+  bfs:TBufferedFileStream;
+begin
+  bfs:=TBufferedFileStream.Create(AFile,fmOpenRead or fmShareDenyWrite);
+  result:=ParseColors(ExtractFileName(AFile),bfs,DSC);
 end;
 
 initialization
 {$I test.lrs}
-//TestLoad;
 end.

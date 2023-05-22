@@ -166,6 +166,11 @@ const
   MDL_CHECKBOX_GRAYED  = #$EE#$9C#$BC; // $E73C
   MDL_CHECKBOX_OUTLINE = #$EE#$9C#$B9; // $E739
 
+  MDL_SCROLLBOX_BTNLEFT  = #$EE#$B7#$99; // $E00E
+  MDL_SCROLLBOX_BTNRIGHT = #$EE#$B7#$9A; // $E00F
+  MDL_SCROLLBOX_BTNUP    = #$EE#$B7#$9B; // $E010
+  MDL_SCROLLBOX_BTNDOWN  = #$EE#$B7#$9C; // $E011
+
 type
   TThemeClassMap = specialize TDictionary<HTHEME, LPCWSTR>;
 
@@ -1007,7 +1012,9 @@ begin
     if Theme[Index] = hTheme then
     begin
       Element:= Index;
-      if Element = teHeader then begin
+      if Element = teScrollBar then begin
+        Element:= Index;
+      end else if Element = teHeader then begin
         if iPartId in [HP_HEADERITEM, HP_HEADERITEMRIGHT] then
         begin
           LCanvas:= TCanvas.Create;
@@ -1694,6 +1701,93 @@ begin
   end;
 end;
 
+procedure DrawScrollBar(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+var
+  LCanvas: TCanvas;
+  AStyle: TTextStyle;
+  BtnSym: string;
+begin
+  LCanvas:= TCanvas.Create;
+  try
+    LCanvas.Handle:= HDC;
+
+    case iPartId of
+      SBP_ARROWBTN:begin
+        LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+        LCanvas.FillRect(pRect);
+
+        AStyle:= LCanvas.TextStyle;
+        AStyle.Alignment:= taCenter;
+        AStyle.Layout:= tlCenter;
+        AStyle.ShowPrefix:= True;
+        LCanvas.Font.Name:= 'Segoe MDL2 Assets';
+        case iStateId of
+          ABS_UPNORMAL,
+          ABS_UPHOT,
+          ABS_UPPRESSED,
+          ABS_UPDISABLED: BtnSym:=MDL_SCROLLBOX_BTNUP;
+          ABS_DOWNNORMAL,
+          ABS_DOWNHOT,
+          ABS_DOWNPRESSED,
+          ABS_DOWNDISABLED: BtnSym:=MDL_SCROLLBOX_BTNDOWN;
+          ABS_LEFTNORMAL,
+          ABS_LEFTHOT,
+          ABS_LEFTPRESSED,
+          ABS_LEFTDISABLED: BtnSym:=MDL_SCROLLBOX_BTNLEFT;
+          ABS_RIGHTNORMAL,
+          ABS_RIGHTHOT,
+          ABS_RIGHTPRESSED,
+          ABS_RIGHTDISABLED: BtnSym:=MDL_SCROLLBOX_BTNRIGHT;
+          ABS_UPHOVER: BtnSym:=MDL_SCROLLBOX_BTNUP;
+          ABS_DOWNHOVER: BtnSym:=MDL_SCROLLBOX_BTNDOWN;
+          ABS_LEFTHOVER: BtnSym:=MDL_SCROLLBOX_BTNLEFT;
+          ABS_RIGHTHOVER: BtnSym:=MDL_SCROLLBOX_BTNRIGHT;
+        end;
+
+        if iStateId in [ABS_UPDISABLED,ABS_DOWNDISABLED,
+                        ABS_LEFTDISABLED,ABS_RIGHTDISABLED] then
+          LCanvas.Font.Color:= SysColor[COLOR_WINDOW]
+        else if iStateId in [ABS_UPHOT,ABS_DOWNHOT,
+                             ABS_LEFTHOT,ABS_RIGHTHOT,
+                             ABS_UPPRESSED,ABS_DOWNPRESSED,
+                             ABS_LEFTPRESSED,ABS_RIGHTPRESSED] then
+          LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]
+        else begin
+          LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+        end;
+        LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, BtnSym, AStyle);
+      end;
+      SBP_GRIPPERHORZ,SBP_GRIPPERVERT:begin
+        if iStateId in [ABS_UPDISABLED,ABS_DOWNDISABLED,
+                        ABS_LEFTDISABLED,ABS_RIGHTDISABLED] then
+          LCanvas.Brush.Color:= SysColor[COLOR_WINDOW]
+        else if iStateId in [ABS_UPHOT,ABS_DOWNHOT,
+                             ABS_LEFTHOT,ABS_RIGHTHOT,
+                             ABS_UPPRESSED,ABS_DOWNPRESSED,
+                             ABS_LEFTPRESSED,ABS_RIGHTPRESSED] then
+          LCanvas.Brush.Color:= SysColor[COLOR_HIGHLIGHT]
+        else begin
+          LCanvas.Brush.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+        end;
+        LCanvas.Pen.Color:=LCanvas.Brush.Color;
+        LCanvas.FrameRect(pRect{, 10, 10});
+      end;
+      else begin
+        LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+        LCanvas.Pen.Color:=LCanvas.Brush.Color;
+        LCanvas.FillRect(pRect);
+      end;
+
+    end;
+
+
+  finally
+    LCanvas.Handle:= 0;
+    LCanvas.Free;
+  end;
+end;
+
 procedure DrawButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
   pClipRect: PRECT);
 begin
@@ -1913,7 +2007,11 @@ begin
     begin
       Index:= SaveDC(hdc);
       try
-        if SameText(ClassName, VSCLASS_DARK_BUTTON) then
+        if SameText(ClassName, VSCLASS_DARK_SCROLLBAR) then
+        begin
+          DrawScrollBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else if SameText(ClassName, VSCLASS_DARK_BUTTON) then
         begin
           DrawButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
         end

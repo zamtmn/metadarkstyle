@@ -181,6 +181,7 @@ var
   CustomFormWndProc: Windows.WNDPROC;
   SysColor: TSysColors;
   SysColorBrush: array[0..COLOR_ENDCOLORS] of HBRUSH;
+  DrawControl: TDrawControl;
   DefSubclassProc: function(hWnd: HWND; uMsg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT; stdcall;
   SetWindowSubclass: function(hWnd: HWND; pfnSubclass: SUBCLASSPROC; uIdSubclass: UINT_PTR; dwRefData: DWORD_PTR): BOOL; stdcall;
 
@@ -2007,7 +2008,7 @@ begin
     begin
       Index:= SaveDC(hdc);
       try
-        if SameText(ClassName, VSCLASS_DARK_SCROLLBAR) then
+        if (SameText(ClassName, VSCLASS_DARK_SCROLLBAR))and DrawControl.CustomDrawScrollbars then
         begin
           DrawScrollBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
         end
@@ -2077,6 +2078,7 @@ end;
 procedure InitializeColors(const CS:TDSColors);
 begin
   SysColor:=CS.SysColor;
+  DrawControl:=CS.DrawControl;
 end;
 
 procedure SetColorsScheme(Scheme:TDSColors);

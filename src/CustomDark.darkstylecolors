@@ -1,0 +1,4 @@
+begin
+  Colors:=DefaultDark;
+  CustomDrawScrollbars:=true;
+end.

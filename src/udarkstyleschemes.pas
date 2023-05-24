@@ -172,6 +172,7 @@ begin
   DefaultDark.SysColor[COLOR_MENUHILIGHT]:=             RGBToColor(66, 66, 66);
   DefaultDark.SysColor[COLOR_MENUBAR]:=                 RGBToColor(42, 42, 42);
   DefaultDark.SysColor[COLOR_FORM]:=                    RGBToColor(53, 53, 53);
+  DefaultDark.DrawControl.CustomDrawScrollbars:=        False;
 
   DefaultWhite.SysColor[COLOR_SCROLLBAR]:=              GetSysColor(COLOR_SCROLLBAR);
   DefaultWhite.SysColor[COLOR_BACKGROUND]:=             GetSysColor(COLOR_BACKGROUND);
@@ -204,6 +205,7 @@ begin
   DefaultWhite.SysColor[COLOR_MENUHILIGHT]:=            GetSysColor(COLOR_MENUHILIGHT);
   DefaultWhite.SysColor[COLOR_MENUBAR]:=                GetSysColor(COLOR_MENUBAR);
   DefaultWhite.SysColor[COLOR_FORM]:=                   GetSysColor(COLOR_FORM);
+  DefaultWhite.DrawControl.CustomDrawScrollbars:=       True;
 end;
 
 initialization

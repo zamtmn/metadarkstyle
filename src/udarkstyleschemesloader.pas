@@ -24,6 +24,7 @@ type
           IdColors,
           IdDefaultDark,IdDefaultWhite,
           IdRGBToColor,IdGetSysColor,
+          IdCustomDrawScrollbars,
           IdCOLOR_SCROLLBAR,
           IdCOLOR_BACKGROUND,
           IdCOLOR_ACTIVECAPTION,
@@ -62,6 +63,7 @@ const
   'COLORS',
   'DEFAULTDARK','DEFAULTWHITE',
   'RGBTOCOLOR','GETSYSCOLOR',
+  'CUSTOMDRAWSCROLLBARS',
   'COLOR_SCROLLBAR',
   'COLOR_BACKGROUND',
   'COLOR_ACTIVECAPTION',
@@ -346,6 +348,14 @@ begin
     Exception.Create(format('Error in line %d (only "RGBToColor()", "GetSysColor()" allowed)',[fn.SourceLinenumber]));
 end;
 
+procedure SetBoolean(var ABoolean:Boolean;pn:TPASEXPR);
+begin
+  if pn is TBoolConstExpr then
+    ABoolean:=TBoolConstExpr(pn).Value
+  else
+    Exception.Create(format('Error in line %d (only True or False allowed)',[pn.SourceLinenumber]));
+end;
+
 
 procedure PrepareAssign(Ass:TPasImplAssign;var DSC:TDSColors);
 var
@@ -355,9 +365,12 @@ begin
   if Ass.Left.OpCode=eopNone then begin
     if Ass.Left.Kind=pekIdent then begin
       lid:=Identifer2TIdent(TPrimitiveExpr(Ass.Left).Value);
-      if lid<>IdColors then
-        Exception.Create(format('Error in line %d (wrong left side: only "Colors" allowed)',[Ass.SourceLinenumber]));
-      DSC:=GetPaletteByName(Ass.Right);
+      case lid of
+              IdColors:DSC:=GetPaletteByName(Ass.Right);
+IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
+      else
+        Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));
+      end;
     end else if Ass.Left.Kind=pekArrayParams then begin
       if (not(Ass.Left is TParamsExpr))and(not(TParamsExpr(Ass.Left).Value is TPrimitiveExpr)) then
         Exception.Create(format('Error in line %d (wrong left side: wrong array index)',[Ass.SourceLinenumber]));
@@ -436,4 +449,5 @@ end;
 
 initialization
 {$I test.lrs}
+{$I CustomDark.lrs}
 end.

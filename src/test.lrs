@@ -30,5 +30,5 @@ LazarusResources.Add('test','DARKSTYLECOLORS',[
   +'TIVECAPTION);'#13#10'  Colors[COLOR_MENUHILIGHT]:=             RGBToColor(6'
   +'6, 66, 166);'#13#10'  Colors[COLOR_MENUBAR]:=                 RGBToColor(42'
   +', 42, 142);'#13#10'  Colors[COLOR_FORM]:=                    RGBToColor(53,'
-  +' 53, 153);'#13#10'end.'
+  +' 53, 153);'#13#10'  CustomDrawScrollbars:=true;'#13#10'end.'
 ]);

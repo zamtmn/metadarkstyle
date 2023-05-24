@@ -30,4 +30,5 @@ begin
   Colors[COLOR_MENUHILIGHT]:=             RGBToColor(66, 66, 166);
   Colors[COLOR_MENUBAR]:=                 RGBToColor(42, 42, 142);
   Colors[COLOR_FORM]:=                    RGBToColor(53, 53, 153);
+  CustomDrawScrollbars:=true;
 end.

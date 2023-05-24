@@ -22,6 +22,7 @@ implementation
 type
   TIdent=(IdUnknown,
           IdColors,
+          IdScheme,
           IdDefaultDark,IdDefaultWhite,
           IdRGBToColor,IdGetSysColor,
           IdCustomDrawScrollbars,
@@ -61,6 +62,7 @@ const
   TIdents2Name:array[TIdent] of string=(
   '',
   'COLORS',
+  'SCHEME',
   'DEFAULTDARK','DEFAULTWHITE',
   'RGBTOCOLOR','GETSYSCOLOR',
   'CUSTOMDRAWSCROLLBARS',
@@ -366,7 +368,7 @@ begin
     if Ass.Left.Kind=pekIdent then begin
       lid:=Identifer2TIdent(TPrimitiveExpr(Ass.Left).Value);
       case lid of
-              IdColors:DSC:=GetPaletteByName(Ass.Right);
+              IdScheme:DSC:=GetPaletteByName(Ass.Right);
 IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
       else
         Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));

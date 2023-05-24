@@ -1,4 +1,4 @@
 begin
-  Colors:=DefaultDark;
+  Scheme:=DefaultDark;
   CustomDrawScrollbars:=true;
 end.

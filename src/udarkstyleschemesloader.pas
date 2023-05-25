@@ -186,53 +186,6 @@ begin
   Result := nil;
 end;
 
-
-
-function ScanModule(modulename:string;module:TStream):TPasModule;
-var
-  E:TSimpleEngine;
-  Parser: TPasParser;
-  Resolver:TStreamResolver;
-  Scanner: TPascalScanner;
-
-begin
-   E := TSimpleEngine.Create;
-   E.uname:=modulename;
-
-   Resolver:=TStreamResolver.Create;
-   Scanner:=TPascalScanner.Create(Resolver);
-   Scanner.LogEvents:=[sleFile,sleLineNumber,sleConditionals,sleDirective];
-   Scanner.OnLog:=E.Onlog;
-   Parser := TPasParser.Create(Scanner, Resolver, E);
-   Parser.LogEvents:=[pleInterface,pleImplementation];
-   Parser.OnLog:=E.Onlog;
-
-   try
-     try
-       Resolver.AddStream(modulename,module);
-       Scanner.OpenFile(modulename);
-       Parser.ParseMain(Result);
-     except
-       on excep:EParserError do begin
-          DebugLn(format('{EW}[MetaDarkStyle]DSScheme parse error: "%s" line:%d column:%d  file:%s',[excep.message,excep.row,excep.column,excep.filename]));
-          FreeAndNil(result);
-       end;
-       on excep:Exception do begin
-          DebugLn(format('{EW}[MetaDarkStyle]DSScheme parse exception: "%s" in file "%s"',[excep.message,modulename]));
-          FreeAndNil(result);
-       end
-       else begin
-         DebugLn(format('{EW}[MetaDarkStyle]Error in file "%s"',[modulename]));
-         FreeAndNil(result);
-       end;
-     end;
-   finally
-     Parser.Free;
-     E.Free;
-     Resolver.Free;
-     Scanner.Free;
-   end;
-end;
 function Identifer2TIdent(id:string):TIdent;
 begin
   id:=UpperCase(id);
@@ -395,7 +348,7 @@ begin
     raise Exception.Create(format('Error in line %d (only := alowed)',[pie.SourceLinenumber]));
 end;
 
-function PrepareModule(m:TPasModule):TDSColors;
+function PrepareModule(m:TPasProgram):TDSColors;
 var
   pie:TPasImplElement;
 begin
@@ -410,15 +363,74 @@ begin
    PrepareElement(pie,Result);
 end;
 
+function ScanModule(modulename:string;module:TStream;out DSC:TDSColors):Boolean;
+var
+  E:TSimpleEngine;
+  Parser: TPasParser;
+  Resolver:TStreamResolver;
+  Scanner: TPascalScanner;
+  m:TPasModule;
+
+begin
+   E := TSimpleEngine.Create;
+   E.uname:=modulename;
+
+   Resolver:=TStreamResolver.Create;
+   Scanner:=TPascalScanner.Create(Resolver);
+   Scanner.LogEvents:=[sleFile,sleLineNumber,sleConditionals,sleDirective];
+   Scanner.OnLog:=E.Onlog;
+   Parser := TPasParser.Create(Scanner, Resolver, E);
+   Parser.LogEvents:=[pleInterface,pleImplementation];
+   Parser.OnLog:=E.Onlog;
+   result:=False;
+
+   try
+     try
+       Resolver.AddStream(modulename,module);
+       Scanner.OpenFile(modulename);
+       Parser.ParseMain(m);
+       try
+         result:=True;
+         dsc:=PrepareModule(TPasProgram(m));
+       except
+         on excep:Exception do begin
+           DebugLn(format('{EW}[MetaDarkStyle]DSScheme prepare exception: "%s" in file "%s"',[excep.message,modulename]));
+           result:=false;
+         end
+         else;
+       end;
+
+     except
+       on excep:EParserError do begin
+          DebugLn(format('{EW}[MetaDarkStyle]DSScheme parse error: "%s" line:%d column:%d  file:%s',[excep.message,excep.row,excep.column,excep.filename]));
+          FreeAndNil(result);
+       end;
+       on excep:Exception do begin
+          DebugLn(format('{EW}[MetaDarkStyle]DSScheme parse exception: "%s" in file "%s"',[excep.message,modulename]));
+          FreeAndNil(result);
+       end
+       else begin
+         DebugLn(format('{EW}[MetaDarkStyle]Error in file "%s"',[modulename]));
+         FreeAndNil(result);
+       end;
+     end;
+   finally
+     Parser.Free;
+     //m.Free;
+     E.Free;
+     Resolver.Free;
+     Scanner.Free;
+   end;
+end;
+
 function ParseColors(modulename:string;module:TStream;out DSC:TDSColors):Boolean;overload;
 var
-  m:TPasModule;
+  m:TPasProgram;
 begin
-  result:=true;
-  m:=ScanModule(modulename,module);
+  result:=false;
   try
     try
-      dsc:=PrepareModule(m);
+     result:=ScanModule(modulename,module,DSC);
     except
       on excep:Exception do begin
         DebugLn(format('{EW}[MetaDarkStyle]DSScheme prepare exception: "%s" in file "%s"',[excep.message,modulename]));
@@ -427,7 +439,6 @@ begin
       else;
     end;
   finally
-    m.Free;
   end;
 end;
 

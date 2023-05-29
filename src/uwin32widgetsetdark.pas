@@ -629,9 +629,9 @@ begin
     if (AWinControl is TCustomTreeView) then
     begin
       AWinControl.Color:= SysColor[COLOR_WINDOW];
-      with TCustomTreeView(AWinControl) do
-      begin
-        ExpandSignType:= tvestPlusMinus;
+      with TCustomTreeView(AWinControl) do begin
+        if DrawControl.TreeViewExpandSignOverride then
+          ExpandSignType:=DrawControl.TreeViewExpandSignValue;
         TreeLineColor:= SysColor[COLOR_GRAYTEXT];
         ExpandSignColor:= SysColor[COLOR_GRAYTEXT];
       end;

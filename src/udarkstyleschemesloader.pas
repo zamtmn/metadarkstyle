@@ -9,7 +9,7 @@ interface
 uses
   SysUtils,Classes,bufstream,
   LCLProc,LCLType,LCLIntf,Graphics,
-  LResources,
+  LResources,ComCtrls,
   PScanner, PParser, PasTree,
   uDarkStyleParams,uDarkStyleSchemes;
 
@@ -25,6 +25,8 @@ type
           IdScheme,
           IdDefaultDark,IdDefaultWhite,
           IdRGBToColor,IdGetSysColor,
+          IdTreeViewExpandSignOverride,IdTreeViewExpandSignValue,
+          IdtvestTheme,IdtvestPlusMinus,IdtvestArrow,IdtvestArrowFill,IdtvestAngleBracket,
           IdCustomDrawScrollbars,
           IdCOLOR_SCROLLBAR,
           IdCOLOR_BACKGROUND,
@@ -65,6 +67,8 @@ const
   'SCHEME',
   'DEFAULTDARK','DEFAULTWHITE',
   'RGBTOCOLOR','GETSYSCOLOR',
+  'TREEVIEWEXPANDSIGNOVERRIDE','TREEVIEWEXPANDSIGNVALUE',
+  'TVESTTHEME','TVESTPLUSMINUS','TVESTARROW','TVESTARROWFILL','TVESTANGLEBRACKET',
   'CUSTOMDRAWSCROLLBARS',
   'COLOR_SCROLLBAR',
   'COLOR_BACKGROUND',
@@ -195,6 +199,25 @@ begin
   Result:=Low(TIdent);
 end;
 
+function GetTreeViewExpandSignValue(pn:TPASEXPR):TTreeViewExpandSignType;
+var
+  lid:TIdent;
+begin
+  if pn is TPrimitiveExpr then begin
+    lid:=Identifer2TIdent(TPrimitiveExpr(pn).Value);
+    case lid of
+       IdtvestTheme:result:=tvestTheme;
+   IdtvestPlusMinus:result:=tvestPlusMinus;
+       IdtvestArrow:result:=tvestArrow;
+   IdtvestArrowFill:result:=tvestArrowFill;
+IdtvestAngleBracket:result:=tvestAngleBracket;
+    else
+      Exception.Create(format('Error in line %d (only allowed "tvestTheme", "tvestPlusMinus", "tvestArrow", "tvestArrowFill", "tvestAngleBracket")',[pn.SourceLinenumber]));
+    end;
+  end else
+    Exception.Create(format('Error in line %d (only palette names allowed "DefaultDark", "DefaultWhite")',[pn.SourceLinenumber]));
+end;
+
 function GetPaletteByName(pn:TPASEXPR):TDSColors;
 var
   lid:TIdent;
@@ -321,8 +344,10 @@ begin
     if Ass.Left.Kind=pekIdent then begin
       lid:=Identifer2TIdent(TPrimitiveExpr(Ass.Left).Value);
       case lid of
-              IdScheme:DSC:=GetPaletteByName(Ass.Right);
-IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
+                    IdScheme:DSC:=GetPaletteByName(Ass.Right);
+IdTreeViewExpandSignOverride:SetBoolean(DSC.DrawControl.TreeViewExpandSignOverride,Ass.Right);
+   IdTreeViewExpandSignValue:DSC.DrawControl.TreeViewExpandSignValue:=GetTreeViewExpandSignValue(Ass.Right);
+      IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
       else
         Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));
       end;

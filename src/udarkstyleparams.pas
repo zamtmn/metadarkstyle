@@ -7,11 +7,13 @@ unit uDarkStyleParams;
 interface
 
 uses
-  LCLType,Graphics;
+  LCLType,Graphics,ComCtrls;
 
 type
   TSysColors=array[0..COLOR_ENDCOLORS] of TColor;
   TDrawControl=record
+    TreeViewExpandSignOverride:Boolean;
+    TreeViewExpandSignValue: TTreeViewExpandSignType;
     CustomDrawScrollbars:Boolean;
   end;
 

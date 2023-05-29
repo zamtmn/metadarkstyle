@@ -9,7 +9,7 @@ interface
 uses
   SysUtils,
   LCLType,LCLIntf,Graphics,Masks,
-  LResources,
+  LResources,ComCtrls,
   uDarkStyleParams,
   gmap,gutil;
 
@@ -173,6 +173,8 @@ begin
   DefaultDark.SysColor[COLOR_MENUBAR]:=                 RGBToColor(42, 42, 42);
   DefaultDark.SysColor[COLOR_FORM]:=                    RGBToColor(53, 53, 53);
   DefaultDark.DrawControl.CustomDrawScrollbars:=        False;
+  DefaultDark.DrawControl.TreeViewExpandSignOverride:=  False;
+  DefaultDark.DrawControl.TreeViewExpandSignValue:=     tvestTheme;
 
   DefaultWhite.SysColor[COLOR_SCROLLBAR]:=              GetSysColor(COLOR_SCROLLBAR);
   DefaultWhite.SysColor[COLOR_BACKGROUND]:=             GetSysColor(COLOR_BACKGROUND);
@@ -206,6 +208,8 @@ begin
   DefaultWhite.SysColor[COLOR_MENUBAR]:=                GetSysColor(COLOR_MENUBAR);
   DefaultWhite.SysColor[COLOR_FORM]:=                   GetSysColor(COLOR_FORM);
   DefaultWhite.DrawControl.CustomDrawScrollbars:=       True;
+  DefaultWhite.DrawControl.TreeViewExpandSignOverride:= False;
+  DefaultWhite.DrawControl.TreeViewExpandSignValue:=    tvestTheme;
 end;
 
 initialization

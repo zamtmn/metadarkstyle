@@ -31,4 +31,6 @@ begin
   Colors[COLOR_MENUBAR]:=                 RGBToColor(42, 42, 142);
   Colors[COLOR_FORM]:=                    RGBToColor(53, 53, 153);
   CustomDrawScrollbars:=true;
+  TreeViewExpandSignOverride:=true;
+  TreeViewExpandSignValue:=tvestArrow;
 end.

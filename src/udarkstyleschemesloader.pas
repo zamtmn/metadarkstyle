@@ -210,7 +210,11 @@ begin
    IdtvestPlusMinus:result:=tvestPlusMinus;
        IdtvestArrow:result:=tvestArrow;
    IdtvestArrowFill:result:=tvestArrowFill;
-IdtvestAngleBracket:result:=tvestAngleBracket;
+IdtvestAngleBracket:result:={$If defined(IdtvestAngleBracket)}
+                              tvestAngleBracket;//появилось в 02eed0c903e14a33c95b4abded0c66d193678d70
+                            {$Else}
+                              tvestArrow;
+                            {$EndIf}
     else
       Exception.Create(format('Error in line %d (only allowed "tvestTheme", "tvestPlusMinus", "tvestArrow", "tvestArrowFill", "tvestAngleBracket")',[pn.SourceLinenumber]));
     end;

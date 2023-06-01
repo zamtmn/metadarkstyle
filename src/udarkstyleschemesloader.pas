@@ -7,8 +7,8 @@ unit uDarkStyleSchemesLoader;
 interface
 
 uses
-  SysUtils,Classes,bufstream,
-  LCLProc,LCLType,LCLIntf,Graphics,
+  SysUtils,Classes,contnrs,bufstream,
+  LCLProc,LCLType,LCLIntf,Graphics,LCLVersion,
   LResources,ComCtrls,
   PScanner, PParser, PasTree,
   uDarkStyleParams,uDarkStyleSchemes;
@@ -108,6 +108,7 @@ type
   TSimpleEngine = class(TPasTreeContainer)
     private
       uname:string;
+      FElements:TObjectList;
     public
 
     constructor Create;
@@ -163,6 +164,8 @@ destructor TSimpleEngine.Destroy;
 begin
   if assigned(FPackage) then
     FPackage.Destroy;
+  if FElements<>nil then
+    FElements.Destroy;
   inherited;
 end;
 
@@ -174,11 +177,15 @@ begin
   Result.Visibility := AVisibility;
   Result.SourceFilename := ASourceFilename;
   Result.SourceLinenumber := ASourceLinenumber;
+  if FElements=nil then
+    FElements:=TObjectList.Create;
+  FElements.Add(result);
 end;
 constructor TSimpleEngine.Create;
 begin
   inherited;
   FPackage:=TPasPackage.Create('',nil);
+  FElements:=nil;
 end;
 procedure TSimpleEngine.Log(Sender : TObject; Const Msg : String);
 begin

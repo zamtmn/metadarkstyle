@@ -214,4 +214,7 @@ end;
 
 initialization
   InitializeDefaultColors;
+finalization
+  if Schemes<>nil then
+    Schemes.Destroy;
 end.

@@ -210,7 +210,7 @@ begin
    IdtvestPlusMinus:result:=tvestPlusMinus;
        IdtvestArrow:result:=tvestArrow;
    IdtvestArrowFill:result:=tvestArrowFill;
-IdtvestAngleBracket:result:={$If defined(IdtvestAngleBracket)}
+IdtvestAngleBracket:result:={$If declared(tvestAngleBracket)}
                               tvestAngleBracket;//появилось в 02eed0c903e14a33c95b4abded0c66d193678d70
                             {$Else}
                               tvestArrow;

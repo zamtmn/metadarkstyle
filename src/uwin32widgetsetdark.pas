@@ -881,6 +881,25 @@ begin
     Exit;
   end;
 
+  if Msg = WM_ERASEBKGND then
+  begin
+    StatusBar:= TStatusBar(Info^.WinControl);
+    TWin32WSStatusBar.DoUpdate(StatusBar);
+    DC:= BeginPaint(Window, @ps);
+    LCanvas:= TCanvas.Create;
+    try
+      LCanvas.Handle:= DC;
+      LCanvas.Brush.Color:= SysColor[COLOR_MENUBAR];
+      LCanvas.FillRect(ps.rcPaint);
+    finally
+      LCanvas.Handle:= 0;
+      LCanvas.Free;
+    end;
+    EndPaint(Window, @ps);
+    Result:= 0;
+    Exit;
+  end;
+
   if Msg = WM_PAINT then
   begin
     StatusBar:= TStatusBar(Info^.WinControl);

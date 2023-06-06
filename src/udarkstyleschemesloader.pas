@@ -28,6 +28,7 @@ type
           IdTreeViewExpandSignOverride,IdTreeViewExpandSignValue,
           IdtvestTheme,IdtvestPlusMinus,IdtvestArrow,IdtvestArrowFill,IdtvestAngleBracket,
           IdCustomDrawScrollbars,
+          IdCustomDrawPushButtons,
           IdCOLOR_SCROLLBAR,
           IdCOLOR_BACKGROUND,
           IdCOLOR_ACTIVECAPTION,
@@ -70,6 +71,7 @@ const
   'TREEVIEWEXPANDSIGNOVERRIDE','TREEVIEWEXPANDSIGNVALUE',
   'TVESTTHEME','TVESTPLUSMINUS','TVESTARROW','TVESTARROWFILL','TVESTANGLEBRACKET',
   'CUSTOMDRAWSCROLLBARS',
+  'CUSTOMDRAWPUSHBUTTONS',
   'COLOR_SCROLLBAR',
   'COLOR_BACKGROUND',
   'COLOR_ACTIVECAPTION',
@@ -359,6 +361,7 @@ begin
 IdTreeViewExpandSignOverride:SetBoolean(DSC.DrawControl.TreeViewExpandSignOverride,Ass.Right);
    IdTreeViewExpandSignValue:DSC.DrawControl.TreeViewExpandSignValue:=GetTreeViewExpandSignValue(Ass.Right);
       IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
+     IdCustomDrawPushButtons:SetBoolean(DSC.DrawControl.CustomDrawPushButtons,Ass.Right);
       else
         Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));
       end;

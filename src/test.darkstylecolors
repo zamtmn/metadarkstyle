@@ -33,4 +33,5 @@ begin
   CustomDrawScrollbars:=true;
   TreeViewExpandSignOverride:=true;
   TreeViewExpandSignValue:=tvestArrow;
+  CustomDrawPushButtons:=true;
 end.

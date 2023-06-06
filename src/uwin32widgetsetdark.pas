@@ -1789,11 +1789,47 @@ begin
   end;
 end;
 
+procedure DrawPushButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+var
+  LCanvas: TCanvas;
+begin
+  LCanvas:= TCanvas.Create;
+  try
+    LCanvas.Handle:= HDC;
+
+    LCanvas.Brush.Style:= bsClear;
+
+    if iStateId in [PBS_NORMAL,PBS_DEFAULTED,PBS_DEFAULTED_ANIMATING] then begin
+      LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+      LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+    end else if iStateId in [PBS_HOT] then begin
+      LCanvas.Brush.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+      LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+    end else if iStateId in [PBS_PRESSED] then begin
+      LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+      LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+    end else begin
+      LCanvas.Brush.Color:= SysColor[COLOR_3DDKSHADOW];
+      LCanvas.Pen.Color:= SysColor[COLOR_BTNHIGHLIGHT];
+    end;
+
+    LCanvas.RoundRect(pRect, 10, 10);
+  finally
+    LCanvas.Handle:= 0;
+    LCanvas.Free;
+  end;
+end;
+
+
 procedure DrawButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
   pClipRect: PRECT);
 begin
   case iPartId of
-    BP_PUSHBUTTON: TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+    BP_PUSHBUTTON: if DrawControl.CustomDrawPushButtons then
+                     DrawPushButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect)
+                   else
+                     TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
     BP_RADIOBUTTON: DrawRadionButton(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
     BP_CHECKBOX: DrawCheckBox(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
     BP_GROUPBOX: DrawGroupBox(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);

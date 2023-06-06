@@ -175,6 +175,7 @@ begin
   DefaultDark.DrawControl.CustomDrawScrollbars:=        False;
   DefaultDark.DrawControl.TreeViewExpandSignOverride:=  False;
   DefaultDark.DrawControl.TreeViewExpandSignValue:=     tvestTheme;
+  DefaultDark.DrawControl.CustomDrawPushButtons:=       False;
 
   DefaultWhite.SysColor[COLOR_SCROLLBAR]:=              GetSysColor(COLOR_SCROLLBAR);
   DefaultWhite.SysColor[COLOR_BACKGROUND]:=             GetSysColor(COLOR_BACKGROUND);
@@ -210,6 +211,7 @@ begin
   DefaultWhite.DrawControl.CustomDrawScrollbars:=       True;
   DefaultWhite.DrawControl.TreeViewExpandSignOverride:= False;
   DefaultWhite.DrawControl.TreeViewExpandSignValue:=    tvestTheme;
+  DefaultWhite.DrawControl.CustomDrawPushButtons:=      True;
 end;
 
 initialization

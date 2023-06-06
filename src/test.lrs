@@ -31,5 +31,6 @@ LazarusResources.Add('test','DARKSTYLECOLORS',[
   +'6, 66, 166);'#13#10'  Colors[COLOR_MENUBAR]:=                 RGBToColor(42'
   +', 42, 142);'#13#10'  Colors[COLOR_FORM]:=                    RGBToColor(53,'
   +' 53, 153);'#13#10'  CustomDrawScrollbars:=true;'#13#10'  TreeViewExpandSign'
-  +'Override:=true;'#13#10'  TreeViewExpandSignValue:=tvestArrow;'#13#10'end.'
+  +'Override:=true;'#13#10'  TreeViewExpandSignValue:=tvestArrow;'#13#10'  Cust'
+  +'omDrawPushButtons:=true;'#13#10'end.'
 ]);

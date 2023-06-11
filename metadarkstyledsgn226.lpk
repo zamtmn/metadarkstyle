@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="metadarkstyledsgn226"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="$(LazarusDir)\ide\include\$(TargetOS)"/>
+        <Libraries Value="E:\lazarus\units\x86_64-win64\win32\"/>
+        <OtherUnitFiles Value="src;$(LazarusDir)\ide"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="src\registermetadarkstyledsgn.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="registerMetaDarkStyleDSGN"/>
+      </Item>
+      <Item>
+        <Filename Value="src\metadarkstyledsgnoptionsframe.pas"/>
+        <UnitName Value="MetaDarkStyleDSGNOptionsFrame"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="CodeTools"/>
+      </Item>
+      <Item>
+        <PackageName Value="IDEIntf"/>
+      </Item>
+      <Item>
+        <PackageName Value="MetaDarkStyle"/>
+      </Item>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

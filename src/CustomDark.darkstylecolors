@@ -2,4 +2,5 @@ begin
   Scheme:=DefaultDark;
   CustomDrawScrollbars:=true;
   CustomDrawPushButtons:=true;
+  CustomDrawComboBoxs:=true;
 end.

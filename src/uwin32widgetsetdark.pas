@@ -171,6 +171,8 @@ const
   MDL_SCROLLBOX_BTNUP    = #$EE#$B7#$9B; // $E010
   MDL_SCROLLBOX_BTNDOWN  = #$EE#$B7#$9C; // $E011
 
+  MDL_COMBOBOX_BTNDOWN  = #$EE#$A5#$B2; // $E972
+
 type
   TThemeClassMap = specialize TDictionary<HTHEME, LPCWSTR>;
 
@@ -1844,6 +1846,79 @@ begin
   end;
 end;
 
+procedure DrawComboBox(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+var
+  LCanvas: TCanvas;
+  AStyle: TTextStyle;
+  BtnSym: string;
+  r:TRect;
+begin
+  LCanvas:= TCanvas.Create;
+  try
+    LCanvas.Handle:= HDC;
+
+    case iPartId of
+      CP_BORDER:begin
+        LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+        LCanvas.FillRect(pRect);
+
+        if iStateId in [CBXS_DISABLED] then begin
+          LCanvas.Brush.Color:= SysColor[COLOR_WINDOW]
+        end
+        else if iStateId in [CBXS_HOT] then begin
+          LCanvas.Brush.Color:= Darker(SysColor[COLOR_HIGHLIGHT],150)
+        end
+        else begin
+          LCanvas.Brush.Color:= SysColor[COLOR_WINDOW]
+        end;
+        LCanvas.FrameRect(pRect);
+      end;
+
+      CP_DROPDOWNBUTTON,CP_DROPDOWNBUTTONRIGHT,CP_DROPDOWNBUTTONLEFT:begin
+
+        AStyle:= LCanvas.TextStyle;
+        AStyle.Alignment:= taCenter;
+        AStyle.Layout:= tlCenter;
+        AStyle.ShowPrefix:= True;
+        LCanvas.Font.Name:= 'Segoe MDL2 Assets';
+        BtnSym:=MDL_COMBOBOX_BTNDOWN;
+
+
+        if iStateId in [CBXS_DISABLED] then begin
+          LCanvas.Font.Color:= SysColor[COLOR_WINDOW];
+          LCanvas.Brush.Color:= SysColor[COLOR_WINDOW]
+        end
+        else if iStateId in [CBXS_HOT] then begin
+          LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT];
+          LCanvas.Brush.Color:= Darker(SysColor[COLOR_HIGHLIGHT],150)
+        end
+        else begin
+          LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];
+          LCanvas.Brush.Color:= SysColor[COLOR_WINDOW]
+        end;
+        r:=pRect;
+        InflateRect(r,-1,-1);
+        LCanvas.FillRect(r);
+        LCanvas.TextRect(r, pRect.TopLeft.X, pRect.TopLeft.Y, BtnSym, AStyle);
+      end;
+      {else begin
+        LCanvas.Brush.Color:= SysColor[COLOR_BTNFACE];
+        LCanvas.Pen.Color:=LCanvas.Brush.Color;
+        LCanvas.FillRect(pRect);
+      end;}
+
+    end;
+
+
+  finally
+    LCanvas.Handle:= 0;
+    LCanvas.Free;
+  end;
+end;
+
+
+
 procedure DrawTabControl(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
   pClipRect: PRECT);
 var
@@ -2055,6 +2130,10 @@ begin
         if (SameText(ClassName, VSCLASS_DARK_SCROLLBAR))and DrawControl.CustomDrawScrollbars then
         begin
           DrawScrollBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+        end
+        else if (SameText(ClassName,VSCLASS_DARK_COMBOBOX))and DrawControl.CustomDrawComboBoxs then
+        begin
+          DrawComboBox(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
         end
         else if SameText(ClassName, VSCLASS_DARK_BUTTON) then
         begin

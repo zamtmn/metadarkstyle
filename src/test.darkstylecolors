@@ -34,4 +34,5 @@ begin
   TreeViewExpandSignOverride:=true;
   TreeViewExpandSignValue:=tvestArrow;
   CustomDrawPushButtons:=true;
+  CustomDrawComboBoxs:=true;
 end.

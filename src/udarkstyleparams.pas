@@ -16,6 +16,7 @@ type
     TreeViewExpandSignValue: TTreeViewExpandSignType;
     CustomDrawScrollbars:Boolean;
     CustomDrawPushButtons:Boolean;
+    CustomDrawComboBoxs:Boolean;
   end;
 
   TDSColors=record

@@ -59,11 +59,13 @@ begin
   CSComboBox.Items.Clear;
   CSComboBox.Items.Add('Dark');
   CSComboBox.Items.Add('White');
-  itr:=Schemes.Min;
-  if itr<>nil then repeat
-    CSComboBox.Items.Add(itr.Data.Value.Name);
-  until not itr.Next;
-  itr.free;
+  if Schemes<>nil then begin
+    itr:=Schemes.Min;
+    if itr<>nil then repeat
+      CSComboBox.Items.Add(itr.Data.Value.Name);
+    until not itr.Next;
+    itr.free;
+  end;
 end;
 
 procedure TDarkStyleDSGNOptionsFrame.ReadSettings({%H-}AOptions: TAbstractIDEOptions);
@@ -87,13 +89,15 @@ begin
   PAMComboBox.ItemIndex:=ord(MetaDarkStyleDSGNOpt.AppMode);
   SchemeToComboSet('Dark',CSComboBox,0);
   SchemeToComboSet('White',CSComboBox,1);
-  itr:=Schemes.Min;
-  i:=2;
-  if itr<>nil then repeat
-    SchemeToComboSet(itr.Data.Value.Name,CSComboBox,i);
-    inc(i);
-  until not itr.Next;
-  itr.free;
+  if Schemes<>nil then begin
+    itr:=Schemes.Min;
+    i:=2;
+    if itr<>nil then repeat
+      SchemeToComboSet(itr.Data.Value.Name,CSComboBox,i);
+      inc(i);
+    until not itr.Next;
+    itr.free;
+  end;
 end;
 
 class function TDarkStyleDSGNOptionsFrame.SupportedOptionsClass: TAbstractIDEOptionsClass;

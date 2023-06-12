@@ -458,8 +458,10 @@ begin
      end;
    finally
      Parser.Free;
-     //m.Free;
+     {$IFDEF FPC_FULLVERSION}{$IF FPC_FULLVERSION > 30202}
+     //error in 3.2.2 cause memoryleak
      E.Free;
+     {$ENDIF}{$ENDIF}
      Resolver.Free;
      Scanner.Free;
    end;

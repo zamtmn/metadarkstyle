@@ -875,6 +875,8 @@ var
   APanel: TStatusPanel;
   StatusBar: TStatusBar;
   Info: PWin32WindowInfo;
+  Detail:TThemedElementDetails;
+  Rect:trect;
 begin
   Info:= GetWin32WindowInfo(Window);
   if (Info = nil) or (Info^.WinControl = nil) then
@@ -921,6 +923,12 @@ begin
             LCanvas.Line(x-2, ps.rcPaint.Top+3, x-2, ps.rcPaint.Bottom-3);
           end;
         end;
+      end;
+      if StatusBar.SizeGrip then begin
+        Rect:=StatusBar.ClientRect;
+        Detail:=ThemeServices.GetElementDetails(tsGripper);
+        Rect.Left:=Rect.Right-24;
+        ThemeServices.DrawElement(LCanvas.Handle,Detail,Rect);
       end;
     finally
       LCanvas.Handle:= 0;

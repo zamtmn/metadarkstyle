@@ -928,7 +928,6 @@ begin
       if StatusBar.SizeGrip then begin
         Rect:=StatusBar.ClientRect;
         Detail:=ThemeServices.GetElementDetails(tsGripper);
-        Rect.Left:=Rect.Right-24;
         GetThemePartSize(TWin32ThemeServices(ThemeServices).Theme[teStatus],
                          LCanvas.Handle, SP_GRIPPER, 0, @Rect, TS_DRAW, gripSize);
         Rect.Left:=Rect.Right-gripSize.cx;

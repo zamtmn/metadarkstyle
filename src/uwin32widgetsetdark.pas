@@ -877,6 +877,7 @@ var
   Info: PWin32WindowInfo;
   Detail:TThemedElementDetails;
   Rect:trect;
+  gripSize: TSize;
 begin
   Info:= GetWin32WindowInfo(Window);
   if (Info = nil) or (Info^.WinControl = nil) then
@@ -928,6 +929,10 @@ begin
         Rect:=StatusBar.ClientRect;
         Detail:=ThemeServices.GetElementDetails(tsGripper);
         Rect.Left:=Rect.Right-24;
+        GetThemePartSize(TWin32ThemeServices(ThemeServices).Theme[teStatus],
+                         LCanvas.Handle, SP_GRIPPER, 0, @Rect, TS_DRAW, gripSize);
+        Rect.Left:=Rect.Right-gripSize.cx;
+        Rect.Top:=Rect.Bottom-gripSize.cy;
         ThemeServices.DrawElement(LCanvas.Handle,Detail,Rect);
       end;
     finally

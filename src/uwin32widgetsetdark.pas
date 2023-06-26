@@ -1100,6 +1100,36 @@ begin
             LCanvas.Handle:= 0;
             LCanvas.Free;
           end;
+        end else
+        if (iPartId = 0) then begin   // The unpainted area of the header after the rightmost column
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            AColor:=SysColor[COLOR_BTNFACE];
+            //FillGradient(hdc, Lighter(AColor, 124), Lighter(AColor, 116), pRect, GRADIENT_FILL_RECT_V);
+            FillGradient(hdc, Lighter(AColor, 102), Lighter(AColor, 94), pRect, GRADIENT_FILL_RECT_V);
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
+        end else
+        if (iPartId = HP_HEADERSORTARROW) then begin  // This applies to the current sort column
+          LCanvas:= TCanvas.Create;
+          try
+            LCanvas.Handle:= hdc;
+            LCanvas.Pen.Color:=RGBToColor(192, 192, 192);
+            if iStateId = 1 then begin;     // iStateId transports the SortDirection
+                LCanvas.Line(pRect.Left+3, 4, pRect.Left+7, 0);
+                LCanvas.Line(pRect.Left+6, 1, pRect.Left+10, 5);
+            end
+            else if iStateId = 2 then begin;
+                LCanvas.Line(pRect.Left+3, 1, pRect.Left+7, 5);
+                LCanvas.Line(pRect.Left+6, 4, pRect.Left+10, 0);
+            end;
+          finally
+            LCanvas.Handle:= 0;
+            LCanvas.Free;
+          end;
         end;
       end else if Element = teMenu then begin
         if iPartId in [MENU_BARBACKGROUND, MENU_BARITEM, MENU_POPUPITEM, MENU_POPUPGUTTER,

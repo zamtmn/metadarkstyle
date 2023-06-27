@@ -1117,12 +1117,12 @@ begin
           LCanvas:= TCanvas.Create;
           try
             LCanvas.Handle:= hdc;
-            LCanvas.Pen.Color:=RGBToColor(192, 192, 192);
-            if iStateId = 1 then begin;     // iStateId transports the SortDirection
+            LCanvas.Pen.Color:=RGBToColor(202, 202, 202);
+            if iStateId = HSAS_SORTEDUP then begin;     // iStateId transports the SortDirection
                 LCanvas.Line(pRect.Left+3, 4, pRect.Left+7, 0);
                 LCanvas.Line(pRect.Left+6, 1, pRect.Left+10, 5);
             end
-            else if iStateId = 2 then begin;
+            else if iStateId = HSAS_SORTEDDOWN then begin;
                 LCanvas.Line(pRect.Left+3, 1, pRect.Left+7, 5);
                 LCanvas.Line(pRect.Left+6, 4, pRect.Left+10, 0);
             end;

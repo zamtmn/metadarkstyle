@@ -12,7 +12,9 @@ metadarkstyledsgn.lpk a package that adds dark theme to Lazarus trunk IDE
 
 ## System requirements
 Windows10 1809 and later
+
 FPC 3.2.2 or trunk
+
 Lazarus 2.2.6 or trunk
 
 ## How to install (update)?

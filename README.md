@@ -1,11 +1,19 @@
 # metadarkstyle
 
 ## What is this?
-Its a package lib that adds dark theme to lazarus IDE, that even works under windows 10!
+metadarkstyle.lpk a package that adds dark theme to your program under windows 10!
+metadarkstyledsgn226.lpk a package that adds dark theme to Lazarus 2.2.6 IDE
+metadarkstyledsgn.lpk a package that adds dark theme to Lazarus trunk IDE
+
 <details>
   <summary> Image preview </summary>
   <img src="https://github.com/mobius1qwe/metadarkstyle/assets/26689802/089e8360-63b0-4759-9771-34b319cea11e" />
 </details>
+
+## System requirements
+Windows10 1809 and later
+FPC 3.2.2 or trunk
+Lazarus 2.2.6 or trunk
 
 ## How to install (update)?
 0) For use this package you need Lazarus2.2.6 or trunk and Windows10

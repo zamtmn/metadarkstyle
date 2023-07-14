@@ -7,7 +7,8 @@ metadarkstyledsgn.lpk a package that adds dark theme to Lazarus trunk IDE
 
 <details>
   <summary> Image preview </summary>
-  <img src="https://github.com/mobius1qwe/metadarkstyle/assets/26689802/089e8360-63b0-4759-9771-34b319cea11e" />
+  <img src="https://github.com/zamtmn/metadarkstyle/blob/main/docs/2.png" />
+  <img src="https://github.com/zamtmn/metadarkstyle/blob/main/docs/1.png" />
 </details>
 
 ## System requirements

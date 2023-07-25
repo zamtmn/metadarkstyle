@@ -66,7 +66,7 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  SetColorsScheme(DefaultTest);
+  SetColorsScheme(DefaultWhite);
   MetaDarkFormChanged(self);
   Invalidate;
 end;

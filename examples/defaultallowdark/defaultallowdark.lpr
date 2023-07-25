@@ -22,7 +22,7 @@ begin
   RequireDerivedFormResource:=True;
   Application.Scaled:=True;
   PreferredAppMode:=pamAllowDark;
-  uMetaDarkStyle.ApplyMetaDarkStyle(DefaultTest);
+  uMetaDarkStyle.ApplyMetaDarkStyle(DefaultDark);
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.Run;

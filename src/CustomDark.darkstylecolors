@@ -3,4 +3,5 @@ begin
   CustomDrawScrollbars:=true;
   CustomDrawPushButtons:=true;
   CustomDrawComboBoxs:=true;
+  CustomDrawTreeViews:=true;
 end.

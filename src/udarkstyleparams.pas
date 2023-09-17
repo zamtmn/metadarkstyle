@@ -17,6 +17,7 @@ type
     CustomDrawScrollbars:Boolean;
     CustomDrawPushButtons:Boolean;
     CustomDrawComboBoxs:Boolean;
+    CustomDrawTreeViews:Boolean;
   end;
 
   TDSColors=record

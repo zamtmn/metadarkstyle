@@ -959,6 +959,7 @@ function InterceptOpenThemeData(hwnd: hwnd; pszClassList: LPCWSTR): hTheme; stdc
 procedure DrawButton(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
 procedure DrawEdit(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
 procedure DrawReBar(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
+procedure DrawTreeView(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: PRECT); forward;
 
 
 {
@@ -1248,6 +1249,9 @@ begin
         DrawEdit(hTheme,hdc,iPartId,iStateId,pRect,pClipRect)
       else if Element = teRebar then
         DrawRebar(hTheme,hdc,iPartId,iStateId,pRect,pClipRect)
+
+      else if (Element = teTreeview) and DrawControl.CustomDrawTreeViews then
+        DrawTreeView(hTheme,hdc,iPartId,iStateId,pRect,pClipRect)
       else
         TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
       exit(S_OK);
@@ -2049,6 +2053,22 @@ begin
     SetDCBrushColor(hdc, SysColor[COLOR_BTNFACE]);
     with pRect do Rectangle(hdc, Left, Top, Right, Bottom);
   end;
+end;
+
+procedure DrawTreeView(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
+  pClipRect: PRECT);
+begin
+  if (iPartId = TVP_TREEITEM) and (iStateId in [TREIS_SELECTEDNOTFOCUS,TREIS_SELECTED]) then begin
+    SelectObject(hdc, GetStockObject(DC_PEN));
+    SetDCPenColor(hdc, SysColor[COLOR_BTNSHADOW]);
+    SelectObject(hdc, GetStockObject(DC_BRUSH));
+    case iStateId of
+      TREIS_SELECTEDNOTFOCUS:SetDCBrushColor(hdc, SysColor[COLOR_BTNHIGHLIGHT]);
+              TREIS_SELECTED:SetDCBrushColor(hdc, Lighter(SysColor[COLOR_BTNHIGHLIGHT], 146));
+    end;
+    with pRect do Rectangle(hdc, Left, Top, Right, Bottom);
+  end else
+    TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect)
 end;
 
 procedure DrawListViewHeader(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;

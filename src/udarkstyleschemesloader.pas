@@ -30,6 +30,7 @@ type
           IdCustomDrawScrollbars,
           IdCustomDrawPushButtons,
           IdCustomDrawComboBoxs,
+          IdCustomDrawTreeViews,
           IdCOLOR_SCROLLBAR,
           IdCOLOR_BACKGROUND,
           IdCOLOR_ACTIVECAPTION,
@@ -74,6 +75,7 @@ const
   'CUSTOMDRAWSCROLLBARS',
   'CUSTOMDRAWPUSHBUTTONS',
   'CUSTOMDRAWCOMBOBOXS',
+  'CUSTOMDRAWTREEVIEWS',
   'COLOR_SCROLLBAR',
   'COLOR_BACKGROUND',
   'COLOR_ACTIVECAPTION',
@@ -365,6 +367,7 @@ IdTreeViewExpandSignOverride:SetBoolean(DSC.DrawControl.TreeViewExpandSignOverri
       IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
      IdCustomDrawPushButtons:SetBoolean(DSC.DrawControl.CustomDrawPushButtons,Ass.Right);
        IdCustomDrawComboBoxs:SetBoolean(DSC.DrawControl.CustomDrawComboBoxs,Ass.Right);
+       IdCustomDrawTreeViews:SetBoolean(DSC.DrawControl.CustomDrawTreeViews,Ass.Right);
       else
         Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));
       end;

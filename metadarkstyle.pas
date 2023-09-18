@@ -8,7 +8,8 @@ unit MetaDarkStyle;
 interface
 
 uses
-  uMetaDarkStyle, uDarkStyleParams, LazarusPackageIntf;
+  uMetaDarkStyle, uDarkStyleParams, uDarkStyleSchemesAdditional, 
+  LazarusPackageIntf;
 
 implementation
 

@@ -507,7 +507,4 @@ begin
   bfs.Destroy;
 end;
 
-initialization
-{$I test.lrs}
-{$I CustomDark.lrs}
 end.

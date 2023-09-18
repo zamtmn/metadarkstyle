@@ -21,6 +21,10 @@
         <Filename Value="src\udarkstyleparams.pas"/>
         <UnitName Value="uDarkStyleParams"/>
       </Item>
+      <Item>
+        <Filename Value="src\udarkstyleschemesadditional.pas"/>
+        <UnitName Value="uDarkStyleSchemesAdditional"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

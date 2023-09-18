@@ -30,15 +30,17 @@ begin
   {$I test.lrs}// see test.darkstylecolors script file,
                // test.lrs was received by the command 'lazres.exe test.lrs test.darkstylecolors'
   LoadLResources;//load all included lrs themes ('CustomDark','test')
-  LoadPath(ExtractFilePath(ParamStr(0)),'*2.darkstylecolors');//load all *2.darkstylecolors from disk
-                                                              //test2.lrs
+  LoadPath(ExtractFilePath(ParamStr(0)),'*2.darkstylecolors');//load all *2.darkstylecolors files from disk
+                                                              //test2.darkstylecolors
 
   PreferredAppMode:=pamForceDark;
   //themes have been loaded
   //choose one below, this can only be done once when the program starts
 
   //uMetaDarkStyle.ApplyMetaDarkStyle(GetScheme('Dark'));      //system dark, provided by metadarkstyle pkg
+                                                               //or direct use DefaultDark variable (ApplyMetaDarkStyle(DefaultDark);)
   //uMetaDarkStyle.ApplyMetaDarkStyle(GetScheme('White'));     //white, provided by metadarkstyle pkg
+                                                               //or direct use DefaultWhite variable (ApplyMetaDarkStyle(DefaultWhite);)
   //uMetaDarkStyle.ApplyMetaDarkStyle(GetScheme('CustomDark'));//custom dark, provided by metadarkstyle in uDarkStyleSchemesAdditional
   uMetaDarkStyle.ApplyMetaDarkStyle(GetScheme('test'));      //from test.lrs resource
   //uMetaDarkStyle.ApplyMetaDarkStyle(GetScheme('test2'));     //from test2.darkstylecolors script file

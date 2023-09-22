@@ -16,19 +16,21 @@ uses
     uWin32WidgetSetDark;
 {$ENDIF}
 
+{$IFDEF WINDOWS}
 procedure ApplyMetaDarkStyle(const CS:TDSColors);
+{$ENDIF}
 procedure MetaDarkFormChanged(Form: TObject);
 
 implementation
 
+{$IFDEF WINDOWS}
 procedure ApplyMetaDarkStyle(const CS:TDSColors);
 begin
-  {$IFDEF WINDOWS}
   InitDarkMode;
   Initialize(CS);
   ApplyDarkStyle;
-  {$ENDIF}
 end;
+{$ENDIF}
 
 procedure MetaDarkFormChanged(Form: TObject);
 begin

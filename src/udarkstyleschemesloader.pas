@@ -25,7 +25,7 @@ type
           IdScheme,
           IdDefaultDark,IdDefaultWhite,
           IdRGBToColor,IdGetSysColor,
-          IdTreeViewExpandSignOverride,IdTreeViewExpandSignValue,
+          IdTreeViewDisableHideSelection,IdTreeViewExpandSignOverride,IdTreeViewExpandSignValue,
           IdtvestTheme,IdtvestPlusMinus,IdtvestArrow,IdtvestArrowFill,IdtvestAngleBracket,
           IdCustomDrawScrollbars,
           IdCustomDrawPushButtons,
@@ -70,7 +70,7 @@ const
   'SCHEME',
   'DEFAULTDARK','DEFAULTWHITE',
   'RGBTOCOLOR','GETSYSCOLOR',
-  'TREEVIEWEXPANDSIGNOVERRIDE','TREEVIEWEXPANDSIGNVALUE',
+  'TREEVIEWDISABLEHIDESELECTION','TREEVIEWEXPANDSIGNOVERRIDE','TREEVIEWEXPANDSIGNVALUE',
   'TVESTTHEME','TVESTPLUSMINUS','TVESTARROW','TVESTARROWFILL','TVESTANGLEBRACKET',
   'CUSTOMDRAWSCROLLBARS',
   'CUSTOMDRAWPUSHBUTTONS',
@@ -361,13 +361,14 @@ begin
     if Ass.Left.Kind=pekIdent then begin
       lid:=Identifer2TIdent(TPrimitiveExpr(Ass.Left).Value);
       case lid of
-                    IdScheme:DSC:=GetPaletteByName(Ass.Right);
-IdTreeViewExpandSignOverride:SetBoolean(DSC.DrawControl.TreeViewExpandSignOverride,Ass.Right);
-   IdTreeViewExpandSignValue:DSC.DrawControl.TreeViewExpandSignValue:=GetTreeViewExpandSignValue(Ass.Right);
-      IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
-     IdCustomDrawPushButtons:SetBoolean(DSC.DrawControl.CustomDrawPushButtons,Ass.Right);
-       IdCustomDrawComboBoxs:SetBoolean(DSC.DrawControl.CustomDrawComboBoxs,Ass.Right);
-       IdCustomDrawTreeViews:SetBoolean(DSC.DrawControl.CustomDrawTreeViews,Ass.Right);
+                      IdScheme:DSC:=GetPaletteByName(Ass.Right);
+  IdTreeViewExpandSignOverride:SetBoolean(DSC.DrawControl.TreeViewExpandSignOverride,Ass.Right);
+     IdTreeViewExpandSignValue:DSC.DrawControl.TreeViewExpandSignValue:=GetTreeViewExpandSignValue(Ass.Right);
+        IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
+       IdCustomDrawPushButtons:SetBoolean(DSC.DrawControl.CustomDrawPushButtons,Ass.Right);
+         IdCustomDrawComboBoxs:SetBoolean(DSC.DrawControl.CustomDrawComboBoxs,Ass.Right);
+         IdCustomDrawTreeViews:SetBoolean(DSC.DrawControl.CustomDrawTreeViews,Ass.Right);
+IdTreeViewDisableHideSelection:SetBoolean(DSC.DrawControl.TreeViewDisableHideSelection,Ass.Right);
       else
         Exception.Create(format('Error in line %d (wrong left side)',[Ass.SourceLinenumber]));
       end;

@@ -2062,6 +2062,9 @@ begin
     SelectObject(hdc, GetStockObject(DC_PEN));
     SetDCPenColor(hdc, SysColor[COLOR_BTNSHADOW]);
     SelectObject(hdc, GetStockObject(DC_BRUSH));
+    if DrawControl.TreeViewDisableHideSelection then
+      if iStateId=TREIS_SELECTEDNOTFOCUS then
+        iStateId:=TREIS_SELECTED;
     case iStateId of
       TREIS_SELECTEDNOTFOCUS:SetDCBrushColor(hdc, SysColor[COLOR_BTNHIGHLIGHT]);
               TREIS_SELECTED:SetDCBrushColor(hdc, Lighter(SysColor[COLOR_BTNHIGHLIGHT], 146));

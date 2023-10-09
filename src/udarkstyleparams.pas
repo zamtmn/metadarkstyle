@@ -12,6 +12,7 @@ uses
 type
   TSysColors=array[0..COLOR_ENDCOLORS] of TColor;
   TDrawControl=record
+    TreeViewDisableHideSelection:Boolean;
     TreeViewExpandSignOverride:Boolean;
     TreeViewExpandSignValue: TTreeViewExpandSignType;
     CustomDrawScrollbars:Boolean;

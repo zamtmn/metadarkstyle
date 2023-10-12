@@ -27,18 +27,20 @@ unit uWin32WidgetSetDark;
 interface
 
 uses
+  Controls,
   LCLVersion, uDarkStyleParams, uDarkStyleSchemes;
 
 procedure ApplyDarkStyle;
 procedure DarkFormChanged(Form: TObject);
 procedure Initialize(const CS:TDSColors);
 procedure SetColorsScheme(Scheme:TDSColors);
+procedure TryEnforceDarkStyleForCtrl(AWinControl: TWinControl);
 
 implementation
 
 uses
   Classes, SysUtils, Win32Int, WSLCLClasses, Forms, Windows, Win32Proc, Menus,
-  Controls, LCLType, Win32WSComCtrls, ComCtrls, LMessages, Win32WSStdCtrls,
+  LCLType, Win32WSComCtrls, ComCtrls, LMessages, Win32WSStdCtrls,
   WSStdCtrls, Win32WSControls, StdCtrls, WSControls, Graphics, Themes, LazUTF8,
   UxTheme, Win32Themes, ExtCtrls, WSMenus, JwaWinGDI, FPImage, Math, uDarkStyle,
   WSComCtrls, CommCtrl, uImport, WSForms, Win32WSButtons, Buttons, Win32Extra,
@@ -198,6 +200,16 @@ begin
   AllowDarkModeForWindow(Window, True);
   SetWindowTheme(Window, 'DarkMode_Explorer', nil);
   SendMessageW(Window, WM_THEMECHANGED, 0, 0);
+end;
+
+procedure TryEnforceDarkStyleForCtrl(AWinControl:TWinControl);
+begin
+  if (AWinControl <> nil) then begin
+     if (AWinControl Is TCustomMemo) then
+        (AWinControl As TCustomMemo).BorderStyle := bsNone;
+     AWinControl.Color := clWindow;
+     EnableDarkStyle(AWinControl.Handle);
+  end;
 end;
 
 procedure AllowDarkStyle(var Window: HWND);

@@ -51,14 +51,15 @@ procedure InitDarkMode;
 implementation
 
 uses
-  UxTheme, JwaWinUser, FileInfo, uDarkStyleParams,
+  UxTheme, JwaWinUser, FileInfo, uDarkStyleParams
   {$IF DEFINED(LCLQT5)}
-  Qt5;
+  ,Qt5
   {$ENDIF}
   {$IF DEFINED(LCLQT6)}
-  Qt6;
+  ,Qt6
   {$ENDIF}
-
+  ;
+  
 var
   AppMode: TPreferredAppMode;
 

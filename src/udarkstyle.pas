@@ -40,7 +40,7 @@ var
   g_darkModeSupported: bool = false;
   //gAppMode: integer = 1;
 
-{$IF DEFINED(LCLQT5)}
+{$IF DEFINED(LCLQT5) OR DEFINED(LCLQT6)}
 procedure ApplyDarkStyle;
 {$ENDIF}
 
@@ -51,11 +51,13 @@ procedure InitDarkMode;
 implementation
 
 uses
-  UxTheme, JwaWinUser, FileInfo, uDarkStyleParams
-{$IF DEFINED(LCLQT5)}
-  , Qt5
-{$ENDIF}
-  ;
+  UxTheme, JwaWinUser, FileInfo, uDarkStyleParams,
+  {$IF DEFINED(LCLQT5)}
+  Qt5;
+  {$ENDIF}
+  {$IF DEFINED(LCLQT6)}
+  Qt6;
+  {$ENDIF}
 
 var
   AppMode: TPreferredAppMode;
@@ -131,7 +133,7 @@ begin
   end;
 end;
 
-{$IF DEFINED(LCLQT5)}
+{$IF DEFINED(LCLQT5) OR DEFINED(LCLQT6)}
 procedure ApplyDarkStyle;
 const
   StyleName: WideString = 'Fusion';
@@ -146,7 +148,7 @@ var
   end;
 
 begin
-  g_darkModeEnabled:= True;
+  //g_darkModeEnabled:= True;
 
   QApplication_setStyle(QStyleFactory_create(@StyleName));
 

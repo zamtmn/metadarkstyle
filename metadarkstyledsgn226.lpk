@@ -17,6 +17,7 @@
     </CompilerOptions>
     <Description Value="Dark (or custom colored) theme for Lazarus IDE 2.2.6"/>
     <License Value="GNU Lesser General Public License as published by the Free Software Foundation either version 2.1 of the License, or (at your option) any later version."/>
+    <Version Minor="9"/>
     <Files>
       <Item>
         <Filename Value="src\registermetadarkstyledsgn.pas"/>

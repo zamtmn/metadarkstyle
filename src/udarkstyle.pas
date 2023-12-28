@@ -158,6 +158,7 @@ begin
   // Modify palette to dark
   if (AppMode = pamForceDark) then
   begin
+    // DarkMode Pallete
     QPalette_setColor(APalette, QPaletteWindow, QColor(53, 53, 53));
     QPalette_setColor(APalette, QPaletteWindowText, QColor(255, 255, 255));
     QPalette_setColor(APalette, QPaletteDisabled, QPaletteWindowText, QColor(127, 127, 127));
@@ -179,8 +180,33 @@ begin
     QPalette_setColor(APalette, QPaletteDisabled, QPaletteHighlight, QColor(80, 80, 80));
     QPalette_setColor(APalette, QPaletteHighlightedText, QColor(255, 255, 255));
     QPalette_setColor(APalette, QPaletteDisabled, QPaletteHighlightedText, QColor(127, 127, 127));
+  end
+  else
+  begin
+    // LightMode Pallete
+    QPalette_setColor(APalette, QPaletteWindow, QColor(240, 240, 240));
+    QPalette_setColor(APalette, QPaletteWindowText, QColor(0, 0, 0));
+    QPalette_setColor(APalette, QPaletteDisabled, QPaletteWindowText, QColor(127, 127, 127));
+    QPalette_setColor(APalette, QPaletteBase, QColor(225, 225, 225));
+    QPalette_setColor(APalette, QPaletteAlternateBase, QColor(255, 255, 255));
+    QPalette_setColor(APalette, QPaletteToolTipBase, QColor(255, 255, 255));
+    QPalette_setColor(APalette, QPaletteToolTipText, QColor(0, 0, 0));
+    QPalette_setColor(APalette, QPaletteText, QColor(0, 0, 0));
+    QPalette_setColor(APalette, QPaletteDisabled, QPaletteText, QColor(127, 127, 127));
+    QPalette_setColor(APalette, QPaletteDark, QColor(200, 200, 200));
+    QPalette_setColor(APalette, QPaletteLight, QColor(255, 255, 255));
+    QPalette_setColor(APalette, QPaletteShadow, QColor(220, 220, 220));
+    QPalette_setColor(APalette, QPaletteButton, QColor(240, 240, 240));
+    QPalette_setColor(APalette, QPaletteButtonText, QColor(0, 0, 0));
+    QPalette_setColor(APalette, QPaletteDisabled, QPaletteButtonText, QColor(127, 127, 127));
+    QPalette_setColor(APalette, QPaletteBrightText, QColor(255, 0, 0));
+    QPalette_setColor(APalette, QPaletteLink, QColor(42, 130, 218));
+    QPalette_setColor(APalette, QPaletteHighlight, QColor(42, 130, 218));
+    QPalette_setColor(APalette, QPaletteDisabled, QPaletteHighlight, QColor(200, 200, 200));
+    QPalette_setColor(APalette, QPaletteHighlightedText, QColor(255, 255, 255));
+    QPalette_setColor(APalette, QPaletteDisabled, QPaletteHighlightedText, QColor(127, 127, 127));
   end;
-
+  
   QApplication_setPalette(APalette);
 end;
 {$ENDIF}

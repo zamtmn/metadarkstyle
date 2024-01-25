@@ -25,3 +25,7 @@ Lazarus 2.2.6 or trunk
 3) Open metadarkstyledsgn226.lpk for Lazarus2.2.6 or metadarkstyledsgn.lpk, compile and install it
 4) Restart IDE applying changes and it should be painted black
 5) Try Tools/Optins/DarkStyle to config package
+
+## License
+GNU Lesser General Public License as published by the Free Software Foundation either version 2.1
+of the License, or (at your option) any later version.

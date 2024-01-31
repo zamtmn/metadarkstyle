@@ -708,7 +708,7 @@ begin
 
     Info^.DefWndProc:= @WindowProc;
 
-    CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtr(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
+    CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtrW(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
 
   if not (csDesigning in AWinControl.ComponentState) then begin
     AWinControl.Color:= SysColor[COLOR_BTNFACE];
@@ -1607,7 +1607,7 @@ begin
     Result:= CallWindowProc(@WindowProc, Window, Msg, WParam, LParam);
     Exit;
   end;
-  Result:= DefWindowProc(Window, Msg, WParam, LParam);
+  Result:= DefWindowProcW(Window, Msg, WParam, LParam);
 end;
 
 procedure DrawCheckBox(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;

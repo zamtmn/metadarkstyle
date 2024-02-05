@@ -902,11 +902,9 @@ begin
   begin
     StatusBar:= TStatusBar(Info^.WinControl);
     TWin32WSStatusBar.DoUpdate(StatusBar);
-    Result:= 0;
-    Exit;
   end;
 
-  if Msg = WM_PAINT then
+  if ((Msg = WM_PAINT) Or (Msg = WM_ERASEBKGND) ) then
   begin
     StatusBar:= TStatusBar(Info^.WinControl);
 
@@ -917,7 +915,7 @@ begin
     LCanvas:= TCanvas.Create;
     try
       LCanvas.Handle:= DC;
-      LCanvas.Brush.Color:= SysColor[COLOR_MENUBAR];
+      LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT];
       LCanvas.FillRect(ps.rcPaint);
 
       X:= 1;

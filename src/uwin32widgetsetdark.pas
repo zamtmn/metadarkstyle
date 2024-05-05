@@ -684,6 +684,7 @@ begin
     begin
       AllowDarkModeForWindow(Window, True);
       RefreshTitleBarThemeColor(Window);
+      Result:= CallWindowProc(CustomFormWndProc, Window, Msg, wParam, lParam);
     end
     else begin
       Result:= CallWindowProc(CustomFormWndProc, Window, Msg, wParam, lParam);

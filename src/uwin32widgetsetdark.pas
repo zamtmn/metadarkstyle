@@ -45,7 +45,7 @@ uses
   UxTheme, Win32Themes, ExtCtrls, WSMenus, JwaWinGDI, FPImage, Math, uDarkStyle,
   WSComCtrls, CommCtrl, uImport, WSForms, Win32WSButtons, Buttons, Win32Extra,
   Win32WSForms, Win32WSSpin, Spin, Win32WSMenus, Dialogs, GraphUtil,
-  Generics.Collections, TmSchema, InterfaceBase;
+  gmap, gutil, TmSchema, InterfaceBase;
 
 type
   TWinControlDark = class(TWinControl);
@@ -176,7 +176,7 @@ const
   MDL_COMBOBOX_BTNDOWN  = #$EE#$A5#$B2; // $E972
 
 type
-  TThemeClassMap = specialize TDictionary<HTHEME, LPCWSTR>;
+  TThemeClassMap = specialize TMap<HTHEME, LPCWSTR, specialize TLess<HTHEME>>;
 
 var
   Theme: TThemeData;
@@ -2140,7 +2140,7 @@ begin
   end;
 
   Result:= TrampolineOpenThemeData(hwnd, pszClassList);
-  ThemeClass.AddOrSetValue(Result, pszClassList);
+  ThemeClass.Insert(Result, pszClassList);
 end;
 
 function InterceptDrawThemeText(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; pszText: LPCWSTR; iCharCount: Integer;

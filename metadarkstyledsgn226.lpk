@@ -10,8 +10,8 @@
       <PathDelim Value="\"/>
       <SearchPaths>
         <IncludeFiles Value="$(LazarusDir)\ide\include\$(TargetOS)"/>
-        <Libraries Value="E:\lazarus\units\x86_64-win64\win32\"/>
-        <OtherUnitFiles Value="src;$(LazarusDir)\ide"/>
+        <Libraries Value="$(LazarusDir)\units\i386-win32\win32"/>
+        <OtherUnitFiles Value="src;$(LazarusDir)\ide;$(LazarusDir)\components\metadarkstyle\src"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>

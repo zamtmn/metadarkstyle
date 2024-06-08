@@ -27,23 +27,25 @@ unit uWin32WidgetSetDark;
 interface
 
 uses
+  Controls,
   LCLVersion, uDarkStyleParams, uDarkStyleSchemes;
 
 procedure ApplyDarkStyle;
 procedure DarkFormChanged(Form: TObject);
 procedure Initialize(const CS:TDSColors);
 procedure SetColorsScheme(Scheme:TDSColors);
+procedure TryEnforceDarkStyleForCtrl(AWinControl: TWinControl);
 
 implementation
 
 uses
   Classes, SysUtils, Win32Int, WSLCLClasses, Forms, Windows, Win32Proc, Menus,
-  Controls, LCLType, Win32WSComCtrls, ComCtrls, LMessages, Win32WSStdCtrls,
+  LCLType, Win32WSComCtrls, ComCtrls, LMessages, Win32WSStdCtrls,
   WSStdCtrls, Win32WSControls, StdCtrls, WSControls, Graphics, Themes, LazUTF8,
   UxTheme, Win32Themes, ExtCtrls, WSMenus, JwaWinGDI, FPImage, Math, uDarkStyle,
   WSComCtrls, CommCtrl, uImport, WSForms, Win32WSButtons, Buttons, Win32Extra,
   Win32WSForms, Win32WSSpin, Spin, Win32WSMenus, Dialogs, GraphUtil,
-  Generics.Collections, TmSchema, InterfaceBase;
+  gmap, gutil, TmSchema, InterfaceBase;
 
 type
   TWinControlDark = class(TWinControl);
@@ -174,7 +176,7 @@ const
   MDL_COMBOBOX_BTNDOWN  = #$EE#$A5#$B2; // $E972
 
 type
-  TThemeClassMap = specialize TDictionary<HTHEME, LPCWSTR>;
+  TThemeClassMap = specialize TMap<HTHEME, LPCWSTR, specialize TLess<HTHEME>>;
 
 var
   Theme: TThemeData;
@@ -198,6 +200,16 @@ begin
   AllowDarkModeForWindow(Window, True);
   SetWindowTheme(Window, 'DarkMode_Explorer', nil);
   SendMessageW(Window, WM_THEMECHANGED, 0, 0);
+end;
+
+procedure TryEnforceDarkStyleForCtrl(AWinControl:TWinControl);
+begin
+  if (AWinControl <> nil) then begin
+     if (AWinControl Is TCustomMemo) then
+        (AWinControl As TCustomMemo).BorderStyle := bsNone;
+     AWinControl.Color := clWindow;
+     EnableDarkStyle(AWinControl.Handle);
+  end;
 end;
 
 procedure AllowDarkStyle(var Window: HWND);
@@ -672,6 +684,7 @@ begin
     begin
       AllowDarkModeForWindow(Window, True);
       RefreshTitleBarThemeColor(Window);
+      Result:= CallWindowProc(CustomFormWndProc, Window, Msg, wParam, lParam);
     end
     else begin
       Result:= CallWindowProc(CustomFormWndProc, Window, Msg, wParam, lParam);
@@ -696,7 +709,7 @@ begin
 
     Info^.DefWndProc:= @WindowProc;
 
-    CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtr(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
+    CustomFormWndProc:= Windows.WNDPROC(SetWindowLongPtrW(Result, GWL_WNDPROC, LONG_PTR(@FormWndProc2)));
 
   if not (csDesigning in AWinControl.ComponentState) then begin
     AWinControl.Color:= SysColor[COLOR_BTNFACE];
@@ -890,11 +903,9 @@ begin
   begin
     StatusBar:= TStatusBar(Info^.WinControl);
     TWin32WSStatusBar.DoUpdate(StatusBar);
-    Result:= 0;
-    Exit;
   end;
 
-  if Msg = WM_PAINT then
+  if ((Msg = WM_PAINT) Or (Msg = WM_ERASEBKGND) ) then
   begin
     StatusBar:= TStatusBar(Info^.WinControl);
 
@@ -905,7 +916,7 @@ begin
     LCanvas:= TCanvas.Create;
     try
       LCanvas.Handle:= DC;
-      LCanvas.Brush.Color:= SysColor[COLOR_MENUBAR];
+      LCanvas.Brush.Color:= SysColor[COLOR_MENUHILIGHT];
       LCanvas.FillRect(ps.rcPaint);
 
       X:= 1;
@@ -1595,7 +1606,7 @@ begin
     Result:= CallWindowProc(@WindowProc, Window, Msg, WParam, LParam);
     Exit;
   end;
-  Result:= DefWindowProc(Window, Msg, WParam, LParam);
+  Result:= DefWindowProcW(Window, Msg, WParam, LParam);
 end;
 
 procedure DrawCheckBox(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect;
@@ -2130,7 +2141,7 @@ begin
   end;
 
   Result:= TrampolineOpenThemeData(hwnd, pszClassList);
-  ThemeClass.AddOrSetValue(Result, pszClassList);
+  ThemeClass.Insert(Result, pszClassList);
 end;
 
 function InterceptDrawThemeText(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; pszText: LPCWSTR; iCharCount: Integer;

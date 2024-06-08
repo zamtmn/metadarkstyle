@@ -12,8 +12,10 @@ uses
       uDarkStyle,
     {ENDIF}
     uDarkStyleParams,
-    uDarkStyleSchemesLoader,
-    uWin32WidgetSetDark;
+    {$IFDEF LCLWIN32}
+    uWin32WidgetSetDark,
+    {$ENDIF}
+    uDarkStyleSchemesLoader;
 {$ENDIF}
 
 {$IFDEF WINDOWS}
@@ -34,6 +36,6 @@ end;
 
 procedure MetaDarkFormChanged(Form: TObject);
 begin
-  {$IFDEF WINDOWS}DarkFormChanged(Form);{$ENDIF}
+  {$IFDEF LCLWIN32}DarkFormChanged(Form);{$ENDIF}
 end;
 end.

@@ -51,7 +51,7 @@ var
 begin
   if Schemes=nil then
     exit(nil);
-  itr:=Schemes.FindGreater(SchameName2SchameID(AName));
+  itr:=Schemes.Find(SchameName2SchameID(AName));
   if itr=nil then
     exit(nil);
   result:=itr.GetMutable;

@@ -9,7 +9,7 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="src"/>
+        <OtherUnitFiles Value="src\dsgn"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
@@ -18,13 +18,15 @@
     <Version Minor="9"/>
     <Files>
       <Item>
-        <Filename Value="src\registermetadarkstyledsgn.pas"/>
-        <HasRegisterProc Value="True"/>
-        <UnitName Value="registerMetaDarkStyleDSGN"/>
+        <Filename Value="src\dsgn\metadarkstyledsgnoptionsframe.pas"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="MetaDarkStyleDSGNOptionsFrame"/>
       </Item>
       <Item>
-        <Filename Value="src\metadarkstyledsgnoptionsframe.pas"/>
-        <UnitName Value="MetaDarkStyleDSGNOptionsFrame"/>
+        <Filename Value="src\dsgn\registermetadarkstyledsgn.pas"/>
+        <HasRegisterProc Value="True"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="registerMetaDarkStyleDSGN"/>
       </Item>
     </Files>
     <RequiredPkgs>

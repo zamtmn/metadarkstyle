@@ -8,7 +8,7 @@ unit metadarkstyledsgn;
 interface
 
 uses
-  registerMetaDarkStyleDSGN, MetaDarkStyleDSGNOptionsFrame, LazarusPackageIntf;
+  registerMetaDarkStyleDSGN, LazarusPackageIntf;
 
 implementation
 

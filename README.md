@@ -1,7 +1,7 @@
 # MetaDarkStyle
 
 ## What is this?
-MetaDarkStyle adds dark theme to LCL apps under Windows 10 or later.
+MetaDarkStyle adds dark theme to LCL/QT apps under Windows 10 or later.
 
 ## Packages
 - `metadarkstyle.lpk` is the base package and contains the basic logic to apply the dark theme.

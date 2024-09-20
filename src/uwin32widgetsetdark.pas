@@ -2328,41 +2328,37 @@ begin
     hModule:= GetModuleHandle(user32);
 
     pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'CreateWindowExW'));
+    // UPX purpose
+    if pFunction=nil then
+      pFunction := FindIATEntry(@Windows.CreateWindowExW);
     if Assigned(pFunction) then
     begin
       Pointer(__CreateWindowExW):= ReplaceImportFunction(pFunction, @_CreateWindowExW);
     end;
     pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'DrawEdge'));
+    // UPX purpose
+    if pFunction=nil then
+      pFunction := FindIATEntry(@Windows.DrawEdge);
     if Assigned(pFunction) then
     begin
       ReplaceImportFunction(pFunction, @_DrawEdge);
     end;
     pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColor'));
+    // UPX purpose
+    if pFunction=nil then
+      pFunction := FindIATEntry(@Windows.GetSysColor);
     if Assigned(pFunction) then
     begin
       ReplaceImportFunction(pFunction, @GetSysColorDark);
     end;
     pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColorBrush'));
+    // UPX purpose
+    if pFunction=nil then
+      pFunction := FindIATEntry(@Windows.GetSysColorBrush);
     if Assigned(pFunction) then
     begin
       ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
     end;
-  end
-  else
-  begin
-    // UPX purpose
-    pFunction := FindIATEntry(@Windows.CreateWindowExW);
-    if Assigned(pFunction) then
-      Pointer(__CreateWindowExW):= ReplaceImportFunction(pFunction, @_CreateWindowExW);
-    pFunction := FindIATEntry(@Windows.DrawEdge);
-    if Assigned(pFunction) then
-      ReplaceImportFunction(pFunction, @_DrawEdge);
-    pFunction := FindIATEntry(@Windows.GetSysColor);
-    if Assigned(pFunction) then
-      ReplaceImportFunction(pFunction, @GetSysColorDark);
-    pFunction := FindIATEntry(@Windows.GetSysColorBrush);
-    if Assigned(pFunction) then
-      ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
   end;
 
   pLibrary:= FindImportLibrary(MainInstance, gdi32);
@@ -2370,17 +2366,13 @@ begin
   begin
     hModule:= GetModuleHandle(gdi32);
     pFunction:= FindImportFunction(pLibrary, Pointer(DeleteObjectOld));
+    // UPX purpose
+    if pFunction=nil then
+      pFunction := FindIATEntry(DeleteObjectOld);
     if Assigned(pFunction) then
     begin
       ReplaceImportFunction(pFunction, @__DeleteObject);
     end;
-  end
-  else
-  begin
-    // UPX purpose
-    pFunction := FindIATEntry(@Windows.DeleteObject);
-    if Assigned(pFunction) then
-      ReplaceImportFunction(pFunction, @__DeleteObject);
   end;
 
   hModule:= GetModuleHandle(comctl32);

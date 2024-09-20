@@ -2359,6 +2359,22 @@ begin
     begin
       ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
     end;
+  end
+  else
+  begin
+    // UPX purpose
+    pFunction := FindIATEntry(@Windows.CreateWindowExW);
+    if Assigned(pFunction) then
+      Pointer(__CreateWindowExW):= ReplaceImportFunction(pFunction, @_CreateWindowExW);
+    pFunction := FindIATEntry(@Windows.DrawEdge);
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @_DrawEdge);
+    pFunction := FindIATEntry(@Windows.GetSysColor);
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @GetSysColorDark);
+    pFunction := FindIATEntry(@Windows.GetSysColorBrush);
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
   end;
 
   pLibrary:= FindImportLibrary(MainInstance, gdi32);
@@ -2368,11 +2384,18 @@ begin
     pFunction:= FindImportFunction(pLibrary, Pointer(DeleteObjectOld));
     // UPX purpose
     if pFunction=nil then
-      pFunction := FindIATEntry(DeleteObjectOld);
+      pFunction := FindIATEntry(@Windows.DeleteObject);
     if Assigned(pFunction) then
     begin
       ReplaceImportFunction(pFunction, @__DeleteObject);
     end;
+  end
+  else
+  begin
+    // UPX purpose
+    pFunction := FindIATEntry(@Windows.DeleteObject);
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @__DeleteObject);
   end;
 
   hModule:= GetModuleHandle(comctl32);

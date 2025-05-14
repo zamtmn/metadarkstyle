@@ -920,6 +920,8 @@ begin
       LCanvas.FillRect(ps.rcPaint);
 
       X:= 1;
+      LCanvas.Font.PixelsPerInch := Info^.WinControl.Font.PixelsPerInch;
+      LCanvas.Font := Info^.WinControl.Font;
       LCanvas.Font.Color:= SysColor[COLOR_BTNTEXT];
       LCanvas.Pen.Color:= SysColor[COLOR_GRAYTEXT];
       if StatusBar.SimplePanel then

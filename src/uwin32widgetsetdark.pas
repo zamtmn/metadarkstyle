@@ -2114,6 +2114,12 @@ begin
     ListView_SetTextColor(hwnd, SysColor[COLOR_WINDOWTEXT]);
   end
 
+  else if lstrcmpiW(pszClassList, 'Listbox') = 0 then
+  begin
+    Result:= TrampolineOpenThemeData(hwnd, VSCLASS_SCROLLBAR);
+    ThemeClass.Insert(Result, VSCLASS_SCROLLBAR);
+  end
+
   else if lstrcmpiW(pszClassList, VSCLASS_SCROLLBAR) = 0 then
   begin
     AllowDarkStyle(hwnd);
@@ -2183,7 +2189,16 @@ begin
     begin
       Index:= SaveDC(hdc);
       try
-        if (SameText(ClassName, VSCLASS_DARK_SCROLLBAR))and DrawControl.CustomDrawScrollbars then
+        if (SameText(ClassName, VSCLASS_SCROLLBAR))then
+        begin
+          if DrawControl.CustomDrawScrollbars then
+            DrawScrollBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect)
+          else begin
+            hTheme:=TrampolineOpenThemeData(0, VSCLASS_DARK_SCROLLBAR);
+            Result:= TrampolineDrawThemeBackground(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+          end;
+        end
+        else if (SameText(ClassName, VSCLASS_DARK_SCROLLBAR))and DrawControl.CustomDrawScrollbars then
         begin
           DrawScrollBar(hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
         end

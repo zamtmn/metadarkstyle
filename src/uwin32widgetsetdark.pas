@@ -191,6 +191,7 @@ var
 
 var
   TrampolineOpenThemeData: function(hwnd: HWND; pszClassList: LPCWSTR): HTHEME; stdcall =  nil;
+  TrampolineOpenNCThemeData: function(hwnd: HWND; pszClassList: LPCWSTR): HTHEME; stdcall =  nil;
   TrampolineDrawThemeText: function(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; pszText: LPCWSTR; iCharCount: Integer;
                                     dwTextFlags, dwTextFlags2: DWORD; const pRect: TRect): HRESULT; stdcall = nil;
   TrampolineDrawThemeBackground: function(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; const pRect: TRect; pClipRect: Pointer): HRESULT; stdcall =  nil;
@@ -2070,6 +2071,11 @@ procedure DrawListViewHeader(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Intege
 begin
   DrawThemeBackgroundDark(Win32Theme.Theme[teListView], hdc, iPartId, iStateId, pRect, pClipRect);
 end;
+function InterceptOpenNCThemeData(hwnd: hwnd; pszClassList: LPCWSTR): hTheme; stdcall;
+begin
+  result:=InterceptOpenThemeData(hwnd,pszClassList);
+  hwnd:=hwnd;
+end;
 
 function InterceptOpenThemeData(hwnd: hwnd; pszClassList: LPCWSTR): hTheme; stdcall;
 var
@@ -2112,12 +2118,6 @@ begin
     ListView_SetBkColor(hwnd, SysColor[COLOR_WINDOW]);
     ListView_SetTextBkColor(hwnd, SysColor[COLOR_WINDOW]);
     ListView_SetTextColor(hwnd, SysColor[COLOR_WINDOWTEXT]);
-  end
-
-  else if lstrcmpiW(pszClassList, 'Listbox') = 0 then
-  begin
-    Result:= TrampolineOpenThemeData(hwnd, VSCLASS_SCROLLBAR);
-    ThemeClass.Insert(Result, VSCLASS_SCROLLBAR);
   end
 
   else if lstrcmpiW(pszClassList, VSCLASS_SCROLLBAR) = 0 then
@@ -2420,10 +2420,12 @@ begin
   if Assigned(pImpDesc) then
   begin
     hUxTheme:= GetModuleHandle(themelib);
+    Pointer(TrampolineOpenNCThemeData):= GetProcAddress(hUxTheme, MAKEINTRESOURCEA(49));
     Pointer(TrampolineOpenThemeData):= GetProcAddress(hUxTheme, 'OpenThemeData');
     Pointer(TrampolineDrawThemeText):= GetProcAddress(hUxTheme, 'DrawThemeText');
     Pointer(TrampolineDrawThemeBackground):= GetProcAddress(hUxTheme, 'DrawThemeBackground');
 
+    ReplaceDelayImportFunctionByOrdinal(hModule, pImpDesc, 49, @InterceptOpenNCThemeData);
     ReplaceDelayImportFunction(hModule, pImpDesc, 'OpenThemeData', @InterceptOpenThemeData);
     ReplaceDelayImportFunction(hModule, pImpDesc, 'DrawThemeText', @InterceptDrawThemeText);
     ReplaceDelayImportFunction(hModule, pImpDesc, 'DrawThemeBackground', @InterceptDrawThemeBackground);

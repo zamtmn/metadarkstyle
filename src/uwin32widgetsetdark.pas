@@ -220,8 +220,9 @@ end;
 procedure TryEnforceDarkStyleForCtrl(AWinControl:TWinControl);
 begin
   if (AWinControl <> nil) then begin
-     if (AWinControl Is TCustomMemo) then
-        (AWinControl As TCustomMemo).BorderStyle := bsNone;
+     if DrawControl.BorderStyleOverride then
+       if (AWinControl Is TCustomMemo) then
+          (AWinControl As TCustomMemo).BorderStyle := bsNone;
      AWinControl.Color := clWindow;
      EnableDarkStyle(AWinControl.Handle);
   end;
@@ -666,7 +667,8 @@ begin
       end;
     end;
     P.ExStyle:= p.ExStyle and not WS_EX_CLIENTEDGE;
-    TWinControlDark(AWinControl).BorderStyle:= bsNone;
+    if DrawControl.BorderStyleOverride then
+      TWinControlDark(AWinControl).BorderStyle:= bsNone;
   end;
 
   Result:= inherited CreateHandle(AWinControl, P);
@@ -759,7 +761,8 @@ begin
   P:= AParams;
   if not (csDesigning in AWinControl.ComponentState) then begin
     P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
-    TCustomListBox(AWinControl).BorderStyle:= bsNone;
+    if DrawControl.BorderStyleOverride then
+      TCustomListBox(AWinControl).BorderStyle:= bsNone;
   end;
 
   Result:= inherited CreateHandle(AWinControl, P);
@@ -806,7 +809,8 @@ var
 begin
   P:= AParams;
   P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
-  TCustomListView(AWinControl).BorderStyle:= bsNone;
+  if DrawControl.BorderStyleOverride then
+    TCustomListView(AWinControl).BorderStyle:= bsNone;
   Result:= inherited CreateHandle(AWinControl, P);
   SetWindowSubclass(Result, @ListViewWindowProc, ID_SUB_LISTVIEW, 0);
   if not (csDesigning in AWinControl.ComponentState) then begin
@@ -824,7 +828,8 @@ begin
   P:= AParams;
 
   if not (csDesigning in AWinControl.ComponentState) then begin
-    TCustomEdit(AWinControl).BorderStyle:= bsNone;
+    if DrawControl.BorderStyleOverride then
+      TCustomEdit(AWinControl).BorderStyle:= bsNone;
     P.ExStyle:= P.ExStyle and not WS_EX_CLIENTEDGE;
     AWinControl.Color:= SysColor[COLOR_WINDOW];
     AWinControl.Font.Color:= SysColor[COLOR_WINDOWTEXT];

@@ -27,6 +27,7 @@ type
           IdRGBToColor,IdGetSysColor,
           IdTreeViewDisableHideSelection,IdTreeViewExpandSignOverride,IdTreeViewExpandSignValue,
           IdtvestTheme,IdtvestPlusMinus,IdtvestArrow,IdtvestArrowFill,IdtvestAngleBracket,
+          IdBorderStyleOverride,
           IdCustomDrawScrollbars,
           IdCustomDrawPushButtons,
           IdCustomDrawComboBoxs,
@@ -72,6 +73,7 @@ const
   'RGBTOCOLOR','GETSYSCOLOR',
   'TREEVIEWDISABLEHIDESELECTION','TREEVIEWEXPANDSIGNOVERRIDE','TREEVIEWEXPANDSIGNVALUE',
   'TVESTTHEME','TVESTPLUSMINUS','TVESTARROW','TVESTARROWFILL','TVESTANGLEBRACKET',
+  'BORDERSTYLEOVERRIDE',
   'CUSTOMDRAWSCROLLBARS',
   'CUSTOMDRAWPUSHBUTTONS',
   'CUSTOMDRAWCOMBOBOXS',
@@ -366,6 +368,7 @@ begin
      IdTreeViewExpandSignValue:DSC.DrawControl.TreeViewExpandSignValue:=GetTreeViewExpandSignValue(Ass.Right);
         IdCustomDrawScrollbars:SetBoolean(DSC.DrawControl.CustomDrawScrollbars,Ass.Right);
        IdCustomDrawPushButtons:SetBoolean(DSC.DrawControl.CustomDrawPushButtons,Ass.Right);
+         IdBorderStyleOverride:SetBoolean(DSC.DrawControl.BorderStyleOverride,Ass.Right);
          IdCustomDrawComboBoxs:SetBoolean(DSC.DrawControl.CustomDrawComboBoxs,Ass.Right);
          IdCustomDrawTreeViews:SetBoolean(DSC.DrawControl.CustomDrawTreeViews,Ass.Right);
 IdTreeViewDisableHideSelection:SetBoolean(DSC.DrawControl.TreeViewDisableHideSelection,Ass.Right);

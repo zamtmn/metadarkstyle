@@ -3,6 +3,7 @@
 }
 
 unit uDarkStyleSchemesLoader;
+{$mode objfpc}{$H+}
 
 interface
 

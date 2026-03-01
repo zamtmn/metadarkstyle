@@ -9,8 +9,8 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
-        <OtherUnitFiles Value="src\dsgn;src"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <OtherUnitFiles Value="src\dsgn"/>
+        <UnitOutputDirectory Value="libdsgn\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
     </CompilerOptions>
     <Description Value="Dark (or custom colored) theme for Lazarus IDE"/>

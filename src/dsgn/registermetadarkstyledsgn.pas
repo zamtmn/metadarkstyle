@@ -7,8 +7,10 @@ interface
 uses
   Classes, SysUtils,
   IDEOptionsIntf, IDEOptEditorIntf, LazIDEIntf, lazconf,
+  AnchorDocking,
   uDarkStyleParams, uDarkStyleSchemes, uMetaDarkStyle,
-  MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions;
+  MetaDarkStyleDSGNOptionsFrame, MetaDarkStyleDSGNOptions,
+  uMetaDarkHeaderStyle;
 
 var
   MetaDarkStyleOptionsID: integer = 1000;
@@ -28,6 +30,10 @@ begin
 end;
 
 procedure SetDarkStyle;
+{$IF DEFINED(MSWINDOWS)}
+var
+  Scheme: TDSColors;
+{$ENDIF}
 begin
  {$IF DEFINED(MSWINDOWS)}
   LoadLResources;
@@ -36,7 +42,12 @@ begin
   MetaDarkStyleDSGNOpt:=TMetaDarkStyleDSGNOptions.Create;
   MetaDarkStyleDSGNOpt.LoadSafe;
   PreferredAppMode:=AppModeOpt2PreferredAppMode(MetaDarkStyleDSGNOpt.AppMode);
-  ApplyMetaDarkStyle(GetScheme(MetaDarkStyleDSGNOpt.ColorScheme));
+  Scheme:=GetScheme(MetaDarkStyleDSGNOpt.ColorScheme);
+  ApplyMetaDarkStyle(Scheme);
+  if IsDarkModeEnabled and (DockMaster<>nil) then begin
+    RegisterMetaDarkHeaderStyle(Scheme);
+    DockMaster.HeaderStyle:=MetaDarkHeaderStyleName;
+  end;
  {$ENDIF}
 end;
 
@@ -45,6 +56,7 @@ begin
   MetaDarkStyleOptionsID:=RegisterIDEOptionsEditor(GroupEnvironment,
                                                    TDarkStyleDSGNOptionsFrame,
                                                    MetaDarkStyleOptionsID)^.Index;
+  HookIDERestoreWindows;
 end;
 
 initialization

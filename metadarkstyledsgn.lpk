@@ -28,6 +28,11 @@
         <AddToUsesPkgSection Value="False"/>
         <UnitName Value="registerMetaDarkStyleDSGN"/>
       </Item>
+      <Item>
+        <Filename Value="src\dsgn\umetadarkheaderstyle.pas"/>
+        <AddToUsesPkgSection Value="False"/>
+        <UnitName Value="uMetaDarkHeaderStyle"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>
@@ -38,6 +43,9 @@
       </Item>
       <Item>
         <PackageName Value="MetaDarkStyle"/>
+      </Item>
+      <Item>
+        <PackageName Value="AnchorDocking"/>
       </Item>
       <Item>
         <PackageName Value="FCL"/>

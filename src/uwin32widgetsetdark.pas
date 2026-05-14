@@ -2598,6 +2598,12 @@ begin
       ReplaceImportFunction(pFunction, @_DrawEdge);
     end;
   end;
+
+  // Notify the LCL app window that system colors changed, so cached
+  // TBrush GDI handles get invalidated and re-resolved against the
+  // current (now hooked) GetSysColorBrush on next paint.
+  if Application.Handle <> 0 then
+    PostMessage(HWND(Application.Handle), WM_SYSCOLORCHANGE, 0, 0);
 end;
 
 initialization

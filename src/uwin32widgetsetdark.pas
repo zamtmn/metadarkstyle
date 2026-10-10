@@ -2223,6 +2223,12 @@ begin
   begin
     P:= GetWindowLongPtr(hwnd, GWL_EXSTYLE);
 
+    // comctl32 creates some children itself (a list view's header, its tooltips),
+    // bypassing the CreateWindowExW hook that marks windows; they follow their parent.
+    if (P and WS_EX_CONTEXTHELP = 0) and (GetParent(hwnd) <> 0) and
+       (GetWindowLongPtr(GetParent(hwnd), GWL_EXSTYLE) and WS_EX_CONTEXTHELP <> 0) then
+      P:= P or WS_EX_CONTEXTHELP;
+
     if (P and WS_EX_CONTEXTHELP = 0) or (lstrcmpiW(pszClassList, VSCLASS_MONTHCAL) = 0) then
     begin
       Result:= TrampolineOpenThemeData(hwnd, pszClassList);
@@ -2597,6 +2603,14 @@ begin
     begin
       ReplaceImportFunction(pFunction, @_DrawEdge);
     end;
+    // comctl32 reads system colours itself (a list view's gridlines), so it takes
+    // the dark ones the executable's imports already take.
+    pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColor'));
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @GetSysColorDark);
+    pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColorBrush'));
+    if Assigned(pFunction) then
+      ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
   end;
 
   // Notify the LCL app window that system colors changed, so cached

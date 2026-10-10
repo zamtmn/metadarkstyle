@@ -2608,9 +2608,6 @@ begin
     pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColor'));
     if Assigned(pFunction) then
       ReplaceImportFunction(pFunction, @GetSysColorDark);
-    pFunction:= FindImportFunction(pLibrary, GetProcAddress(hModule, 'GetSysColorBrush'));
-    if Assigned(pFunction) then
-      ReplaceImportFunction(pFunction, @GetSysColorBrushDark);
   end;
 
   // Notify the LCL app window that system colors changed, so cached

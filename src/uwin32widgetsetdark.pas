@@ -1708,7 +1708,7 @@ begin
     if iStateId in [CBS_UNCHECKEDHOT, CBS_MIXEDHOT, CBS_CHECKEDHOT] then
       LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]
     else begin
-      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= RGBToColor(192, 192, 192); //SysColor[COLOR_GRAYTEXT]; //RGBToColor(192, 192, 192);
     end;
     LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_OUTLINE, AStyle);
 
@@ -1722,7 +1722,7 @@ begin
     else if iStateId in [CBS_CHECKEDNORMAL, CBS_CHECKEDHOT,
                          CBS_CHECKEDPRESSED, CBS_CHECKEDDISABLED] then
     begin
-      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= RGBToColor(192, 192, 192); //SysColor[COLOR_GRAYTEXT]; //RGBToColor(192, 192, 192);
       LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_CHECKBOX_CHECKED, AStyle);
     end;
   finally
@@ -1803,7 +1803,7 @@ begin
     if iStateId in [RBS_CHECKEDNORMAL, RBS_CHECKEDHOT,
                     RBS_CHECKEDPRESSED, RBS_CHECKEDDISABLED] then
     begin
-      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= RGBToColor(192, 192, 192); //SysColor[COLOR_GRAYTEXT]; //RGBToColor(192, 192, 192);
       LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_CHECKED, AStyle );
     end;
 
@@ -1813,7 +1813,7 @@ begin
     else if iStateId in [RBS_UNCHECKEDHOT, RBS_CHECKEDHOT] then
       LCanvas.Font.Color:= SysColor[COLOR_HIGHLIGHT]
     else begin
-      LCanvas.Font.Color:= SysColor[COLOR_GRAYTEXT];//RGBToColor(192, 192, 192);
+      LCanvas.Font.Color:= RGBToColor(192, 192, 192); //SysColor[COLOR_GRAYTEXT]; //RGBToColor(192, 192, 192);
     end;
     // Draw outline circle
     LCanvas.TextRect(pRect, pRect.TopLeft.X, pRect.TopLeft.Y, MDL_RADIO_OUTLINE, AStyle);

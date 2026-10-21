@@ -1496,15 +1496,18 @@ function _CreateWindowExW(dwExStyle: DWORD; lpClassName: LPCWSTR; lpWindowName: 
 var
   AParams: PNCCreateParams absolute lpParam;
 begin
-  if Assigned(AParams) and (AParams^.WinControl is TCustomForm) then
+  if IsDarkModeEnabled then
   begin
-    if (hWndParent = 0) and AParams^.WinControl.ClassNameIs('TfrmMain') then
-      lpClassName:= ClassNameTC
-    else begin
-      lpClassName:= ClassNameW;
+    if Assigned(AParams) and (AParams^.WinControl is TCustomForm) then
+    begin
+      if (hWndParent = 0) and AParams^.WinControl.ClassNameIs('TfrmMain') then
+        lpClassName:= ClassNameTC
+      else begin
+        lpClassName:= ClassNameW;
+      end;
+    end else begin
+      dwExStyle:= dwExStyle or WS_EX_CONTEXTHELP;
     end;
-  end else begin
-    dwExStyle:= dwExStyle or WS_EX_CONTEXTHELP;
   end;
   Result:= __CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 end;
@@ -1664,20 +1667,23 @@ function FormWndProc(Window: HWnd; Msg: UInt; WParam: Windows.WParam;
 var
   Info: PWin32WindowInfo;
 begin
-  if Msg = WM_CREATE then
+  if IsDarkModeEnabled then
   begin
-    AllowDarkModeForWindow(Window, True);
-    RefreshTitleBarThemeColor(Window);
-  end
-  else if (Msg = WM_SETFONT) then
-  begin
-    Info := GetWin32WindowInfo(Window);
-    if Assigned(Info) then
+    if Msg = WM_CREATE then
     begin
-     Info^.DefWndProc:= @WindowProc;
+      AllowDarkModeForWindow(Window, True);
+      RefreshTitleBarThemeColor(Window);
+    end
+    else if (Msg = WM_SETFONT) then
+    begin
+      Info := GetWin32WindowInfo(Window);
+      if Assigned(Info) then
+      begin
+       Info^.DefWndProc:= @WindowProc;
+      end;
+      Result:= CallWindowProc(@WindowProc, Window, Msg, WParam, LParam);
+      Exit;
     end;
-    Result:= CallWindowProc(@WindowProc, Window, Msg, WParam, LParam);
-    Exit;
   end;
   Result:= DefWindowProcW(Window, Msg, WParam, LParam);
 end;

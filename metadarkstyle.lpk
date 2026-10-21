@@ -12,6 +12,11 @@
         <OtherUnitFiles Value="src"/>
         <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
+      <Linking>
+        <Debugging>
+          <DebugInfoType Value="dsDwarf3"/>
+        </Debugging>
+      </Linking>
     </CompilerOptions>
     <Description Value="Dark (or custom colored) theme for LCL applications"/>
     <License Value="GNU Lesser General Public License as published by the Free Software Foundation either version 2.1 of the License, or (at your option) any later version."/>

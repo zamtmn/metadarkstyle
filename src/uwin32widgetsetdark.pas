@@ -1053,6 +1053,28 @@ procedure DrawTreeView(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; con
 
 
 {
+  Checks whether hTheme is the theme of Element. Besides the screen-PPI handle
+  (Win32Theme.Theme[Element]) this also recognizes the per-DPI handles the LCL
+  uses on monitors with another DPI (per-monitor v2, e.g. the main menu bar at
+  DPI > 96): ThemeForPPI caches one handle per PPI, and the LCL menu code
+  requests it with the DPI of the form's monitor.
+}
+function IsTheme(hTheme: HTHEME; Element: TThemedElement): Boolean;
+{$IF LCL_FULLVERSION >= 3000000}
+var
+  i: Integer;
+{$ENDIF}
+begin
+  Result:= (hTheme = Win32Theme.Theme[Element]);
+  {$IF LCL_FULLVERSION >= 3000000}
+  if not Result then
+    for i:= 0 to Screen.MonitorCount - 1 do
+      if hTheme = Win32Theme.ThemeForPPI[Element, Screen.Monitors[i].PixelsPerInch] then
+        Exit(True);
+  {$ENDIF}
+end;
+
+{
   Draws text using the color and font defined by the visual style
 }
 function DrawThemeTextDark(hTheme: HTHEME; hdc: HDC; iPartId, iStateId: Integer; pszText: LPCWSTR; iCharCount: Integer;
@@ -1071,7 +1093,7 @@ begin
   OldColor:= GetTextColor(hdc);
   if (hTheme = Win32Theme.Theme[teToolTip]) then
     OldColor:= SysColor[COLOR_INFOTEXT]
-  else if (hTheme = Win32Theme.Theme[teMenu]) then begin
+  else if IsTheme(hTheme, teMenu) then begin
     if needMenuGrayText(iPartId, iStateId) then
       OldColor:= SysColor[COLOR_GRAYTEXT]
     else
@@ -1205,7 +1227,7 @@ begin
         LCanvas.Free;
       end;
     end;
-  end else if (hTheme = Win32Theme.Theme[teMenu]) then begin
+  end else if IsTheme(hTheme, teMenu) then begin
     if iPartId in [MENU_BARBACKGROUND, MENU_BARITEM, MENU_POPUPITEM, MENU_POPUPGUTTER,
                    MENU_POPUPSUBMENU, MENU_POPUPSEPARATOR, MENU_POPUPCHECK,
                    MENU_POPUPCHECKBACKGROUND] then begin
